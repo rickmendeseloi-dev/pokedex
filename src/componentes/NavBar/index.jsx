@@ -52,37 +52,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function NavBar() {
+export default function NavBar(PokemonFilter) {
   return (
     <Box sx={{ flexGrow: 1, marginBottom:"2em" }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: "black"}}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            MUI
-          </Typography>
-          <Search>
+          <box display="flex" justifyContent="space-between" width="100%">
+            <box component="img" src="/assets/pokemon-logo.png" height="3cm" />
+          <Search onChange={(e) => PokemonFilter(e.target.value)}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            <StyledInputBase placeholder="Pesquisando…" inputProps={{ "aria-label": "search" }}></StyledInputBase>
           </Search>
+        </box>
         </Toolbar>
       </AppBar>
     </Box>
