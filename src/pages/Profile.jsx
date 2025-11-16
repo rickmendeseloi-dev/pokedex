@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../componentes/NavBar";
 import PokemonTable from "../componentes/PokemonTable";
 
-export const Profile = ({ pokemonData }) => {
+export default function Profile({ pokemonData }) {
   const { name, sprites, moves } = pokemonData || {};
   const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ export const Profile = ({ pokemonData }) => {
     if (!pokemonData) {
       navigate("/");
     }
-  }, []);
+  }, [pokemonData, navigate]);
 
   if (!pokemonData) {
     return null;
@@ -60,6 +60,10 @@ export const Profile = ({ pokemonData }) => {
       </Container>
     </>
   );
+<<<<<<< HEAD
 };
 
 export default Profile;
+=======
+}
+>>>>>>> a253c209efd93af2ba2e168de824acc267d39cd9

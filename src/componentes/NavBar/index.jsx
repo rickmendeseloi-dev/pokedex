@@ -52,6 +52,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+
+
 export default function Navbar({ pokemonFilter, hideSearch }) {
   const navigate = useNavigate();
   return (
@@ -61,11 +63,11 @@ export default function Navbar({ pokemonFilter, hideSearch }) {
           <Box display="flex" justifyContent="space-between" width="100%">
             <Box component="img" src="/assets/pokemon-logo.png" height="3em" sx={{ cursor: "pointer" }} onClick={() => navigate("/")} />
             {!hideSearch && (
-              <Search onChange={(e) => pokemonFilter(e.target.value)}>
+              <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
-                <StyledInputBase placeholder="Pesquisando..." inputProps={{ "aria-label": "search" }} />
+                <StyledInputBase onChange={(e) => pokemonFilter(e.target.value)} placeholder="Pesquisando..." inputProps={{ "aria-label": "search" }} />
               </Search>
             )}
           </Box>
