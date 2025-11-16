@@ -47,14 +47,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       '&:focus': {
         width: '20ch',
       },
+      
     },
   },
 }));
 
-export default function NavBar() {
+export default function NavBar(PokemonFilter) {
   return (
     <Box sx={{ flexGrow: 1, marginBottom:"2em" }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: "black"}}>
         <Toolbar>
           <IconButton
             size="large"
@@ -71,17 +72,15 @@ export default function NavBar() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Pokedex
+            MUI
           </Typography>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            <StyledInputBase placeholder="Pesquisando…" inputProps={{ "aria-label": "search" }}></StyledInputBase>
           </Search>
+        </box>
         </Toolbar>
       </AppBar>
     </Box>
