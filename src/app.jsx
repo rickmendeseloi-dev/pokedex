@@ -8,13 +8,11 @@ import Geracoes from "./pages/Geracoes"; // O seu código
 
 function App() {
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/geracoes" element={<Geracoes />} />
         {/* <Route path="/categorias" element={<Categorias />} /> */}
       </Routes>
-    </BrowserRouter>
   );
 }
 
