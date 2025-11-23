@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Importando as páginas
 import Home from "./pages/Home";       // O código do Alan
 import Geracoes from "./pages/Geracoes"; // O seu código
-// import Categorias from "./pages/Categorias"; // Ainda vamos criar esse
+import Categorias from "./pages/Categorias";
 
 function App() {
   return (
