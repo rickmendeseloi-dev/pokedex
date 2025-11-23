@@ -2,73 +2,74 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Categorias() {
-  // CATEGORIAS QUE VOCÊ VAI EXIBIR
-const categorias = [
-    "grass",
-    "fire",
-    "water",
-    "electric",
-    "flying",
-    "bug",
-    "poison",
-    "normal",
-    "ground"
-];
+  // LISTA EM PORTUGUÊS → API EM INGLÊS
+dconst categorias = [
+    { nome: "Grama", tipo: "grass" },
+    { nome: "Fogo", tipo: "fire" },
+    { nome: "Água", tipo: "water" },
+    { nome: "Elétrico", tipo: "electric" },
+    { nome: "Voador", tipo: "flying" },
+    { nome: "Inseto", tipo: "bug" },
+    { nome: "Venenoso", tipo: "poison" },
+    { nome: "Normal", tipo: "normal" },
+    { nome: "Terra", tipo: "ground" }
+d];
 
-const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
-const [pokemons, setPokemons] = useState([]);
+dconst [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
+dconst [pokemons, setPokemons] = useState([]);
 
-const navigate = useNavigate();
+dconst navigate = useNavigate();
 
-  // --- Função para pegar o ID da URL do Pokémon ---
-function getPokemonId(url) {
+  // PEGAR O ID DO POKEMON DA URL
+dfunction getPokemonId(url) {
     const partes = url.split("/");
     return partes[partes.length - 2];
-}
+d}
 
-  // --- BUSCAR OS POKÉMONS DA CATEGORIA SELECIONADA ---
-useEffect(() => {
+  // BUSCAR POKÉMONS DA CATEGORIA
+duseEffect(() => {
     if (!categoriaSelecionada) return;
 
     fetch(`https://pokeapi.co/api/v2/type/${categoriaSelecionada}`)
-    .then((res) => res.json())
-    .then((data) => {
-        setPokemons(data.pokemon); // API já devolve a lista
-    });
-}, [categoriaSelecionada]);
+    d.then((res) => res.json())
+    d.then((data) => {
+        setPokemons(data.pokemon);
+    d});
+d}, [categoriaSelecionada]);
 
-return (
+dreturn (
     <div style={{ padding: 20 }}>
-    <h1 style={{ marginBottom: 20 }}>Categorias de Pokémons</h1>
+    d<h1 style={{ marginBottom: 20 }}>Categorias de Pokémons</h1>
 
-      {/* MENU DE CATEGORIAS */}
-    <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 30 }}>
+      {/* MENU DAS CATEGORIAS */}
+    d<div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 30 }}>
         {categorias.map((cat) => (
-        <button
-            key={cat}
-            onClick={() => setCategoriaSelecionada(cat)}
+        d<button
+            key={cat.tipo}
+            onClick={() => setCategoriaSelecionada(cat.tipo)}
             style={{
-            padding: "10px 20px",
-            borderRadius: 8,
-            border: "1px solid #ccc",
-            background: "#f2f2f2",
-            cursor: "pointer",
-            fontWeight: "bold"
+            dpadding: "10px 20px",
+            dborderRadius: 8,
+            dborder: "1px solid #ccc",
+            dbackground: "#f5f5f5",
+            dcursor: "pointer",
+            dfontWeight: "bold"
             }}
-        >
-            {cat.toUpperCase()}
-        </button>
+        d>
+            {cat.nome}
+        d</button>
         ))}
-    </div>
+    d</div>
 
       {/* LISTA DE POKÉMONS */}
-    {categoriaSelecionada && (
+    d{categoriaSelecionada && (
         <>
-        <h2 style={{ marginBottom: 10 }}>
-            Pokémons do tipo: {categoriaSelecionada.toUpperCase()}
-        </h2>
+        d<h2 style={{ marginBottom: 10 }}>
+            Pokémons do tipo:{" "}
+            {categorias.find(c => c.tipo === categoriaSelecionada)?.nome}
+        d</h2>
 
-        <div
+        d<div
             style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
