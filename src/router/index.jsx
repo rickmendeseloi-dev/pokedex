@@ -10,11 +10,7 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home setPokemonData={setPokemonData} />} />
-<<<<<<< HEAD
-  <Route path="/profile" element={<Profile pokemonData={pokemonData} />} />
-=======
         <Route path="/profile" element={<Profile pokemonData={pokemonData} />} />
->>>>>>> a253c209efd93af2ba2e168de824acc267d39cd9
       </Routes>
     </BrowserRouter>
   );

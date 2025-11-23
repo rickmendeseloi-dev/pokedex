@@ -60,10 +60,4 @@ export default function Profile({ pokemonData }) {
       </Container>
     </>
   );
-<<<<<<< HEAD
-};
-
-export default Profile;
-=======
-}
->>>>>>> a253c209efd93af2ba2e168de824acc267d39cd9
+  }
