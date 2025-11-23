@@ -32,7 +32,7 @@ export default function Categorias() {
   useEffect(() => {
     if (!categoriaSelecionada) return;
 
-    fetch(`https://pokeapi.co/api/v2/type/${categoriaSelecionada}`)
+    fetch(`https://pokeapi.com/api/v2/type/${categoriaSelecionada}`)
       .then((res) => res.json())
       .then((data) => {
         // A API de types retorna um array com objetos "pokemon" dentro
