@@ -1,19 +1,21 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./Home";
 
-export default function App() {
+// Importando as páginas
+import Home from "./pages/Home";       // O código do Alan
+import Geracoes from "./pages/Geracoes"; // O seu código
+// import Categorias from "./pages/Categorias"; // Ainda vamos criar esse
+
+function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         <Route path="/" element={<Home />} />
-
-        {/* As telas abaixo serão feitas pelo grupo */}
-        <Route path="/geracoes" element={<div>Gerações</div>} />
-        <Route path="/categorias" element={<div>Categorias</div>} />
-        <Route path="/pokemon/:id" element={<div>Detalhes</div>} />
-
+        <Route path="/geracoes" element={<Geracoes />} />
+        {/* <Route path="/categorias" element={<Categorias />} /> */}
       </Routes>
     </BrowserRouter>
   );
 }
+
+export default App;
