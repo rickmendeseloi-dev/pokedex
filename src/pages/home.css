@@ -1,0 +1,56 @@
+.home-container {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f7f7f7;
+  height: 100vh;
+} 
+
+.menu {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 40px;
+  background-color: #ef5350;
+  align-items: center;
+}
+
+.pokeball {
+  width: 55px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pokeball:hover {
+  transform: rotate(20deg);
+}
+
+.menu-item {
+  margin: 0 15px;
+  font-size: 18px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.menu-item:hover {
+  text-decoration: underline;
+}
+
+.home-content {
+  margin-top: 40px;
+}
+
+.home-buttons .btn {
+  display: inline-block;
+  margin: 15px;
+  padding: 12px 22px;
+  background-color: #42a5f5;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background-color: #1e88e5;
+}
