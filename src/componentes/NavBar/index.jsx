@@ -52,6 +52,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+
+
 export default function Navbar({ pokemonFilter, hideSearch }) {
   const navigate = useNavigate();
   return (
