@@ -1,10 +1,9 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Importando as páginas
-import Home from "./pages/Home";       // O código do Alan
-import Geracoes from "./pages/Geracoes"; // O seu código
-import Categorias from "./pages/Categorias";
+import Home from "./pages/Home";
+import Geracoes from "./pages/Geracoes";
+import Categorias from "./pages/Categorias"; // <--- Importe aqui
 
 function App() {
   return (
@@ -12,7 +11,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/geracoes" element={<Geracoes />} />
-        {/* <Route path="/categorias" element={<Categorias />} /> */}
+        {/* Adicione esta linha abaixo */}
+        <Route path="/categorias" element={<Categorias />} />
       </Routes>
     </BrowserRouter>
   );

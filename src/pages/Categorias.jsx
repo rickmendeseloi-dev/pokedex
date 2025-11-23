@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+// Removi o useNavigate porque vamos usar o Modal, igual na tela de Gerações
+import Modal from "../components/Modal"; 
 
 export default function Categorias() {
   // LISTA EM PORTUGUÊS → API EM INGLÊS
-dconst categorias = [
+  const categorias = [
     { nome: "Grama", tipo: "grass" },
     { nome: "Fogo", tipo: "fire" },
     { nome: "Água", tipo: "water" },
@@ -13,98 +14,114 @@ dconst categorias = [
     { nome: "Venenoso", tipo: "poison" },
     { nome: "Normal", tipo: "normal" },
     { nome: "Terra", tipo: "ground" }
-d];
+  ];
 
-dconst [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
-dconst [pokemons, setPokemons] = useState([]);
-
-dconst navigate = useNavigate();
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
+  const [pokemons, setPokemons] = useState([]);
+  
+  // Estado para controlar o Modal (Igual você fez em Geracoes)
+  const [pokemonSelecionado, setPokemonSelecionado] = useState(null);
 
   // PEGAR O ID DO POKEMON DA URL
-dfunction getPokemonId(url) {
+  function getPokemonId(url) {
     const partes = url.split("/");
     return partes[partes.length - 2];
-d}
+  }
 
   // BUSCAR POKÉMONS DA CATEGORIA
-duseEffect(() => {
+  useEffect(() => {
     if (!categoriaSelecionada) return;
 
     fetch(`https://pokeapi.co/api/v2/type/${categoriaSelecionada}`)
-    d.then((res) => res.json())
-    d.then((data) => {
-        setPokemons(data.pokemon);
-    d});
-d}, [categoriaSelecionada]);
+      .then((res) => res.json())
+      .then((data) => {
+        // A API de types retorna um array com objetos "pokemon" dentro
+        setPokemons(data.pokemon); 
+      });
+  }, [categoriaSelecionada]);
 
-dreturn (
-    <div style={{ padding: 20 }}>
-    d<h1 style={{ marginBottom: 20 }}>Categorias de Pokémons</h1>
+  return (
+    <div style={{ padding: 20, textAlign: "center" }}>
+      <h1 style={{ marginBottom: 20 }}>Categorias de Pokémons</h1>
 
       {/* MENU DAS CATEGORIAS */}
-    d<div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 30 }}>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginBottom: 30 }}>
         {categorias.map((cat) => (
-        d<button
+          <button
             key={cat.tipo}
             onClick={() => setCategoriaSelecionada(cat.tipo)}
             style={{
-            dpadding: "10px 20px",
-            dborderRadius: 8,
-            dborder: "1px solid #ccc",
-            dbackground: "#f5f5f5",
-            dcursor: "pointer",
-            dfontWeight: "bold"
+              padding: "10px 20px",
+              borderRadius: 8,
+              border: "1px solid #ccc",
+              background: categoriaSelecionada === cat.tipo ? "#ffcb05" : "#f5f5f5", // Destaque se ativo
+              color: categoriaSelecionada === cat.tipo ? "#000" : "#333",
+              cursor: "pointer",
+              fontWeight: "bold"
             }}
-        d>
+          >
             {cat.nome}
-        d</button>
+          </button>
         ))}
-    d</div>
+      </div>
 
       {/* LISTA DE POKÉMONS */}
-    d{categoriaSelecionada && (
+      {categoriaSelecionada && (
         <>
-        d<h2 style={{ marginBottom: 10 }}>
-            Pokémons do tipo:{" "}
-            {categorias.find(c => c.tipo === categoriaSelecionada)?.nome}
-        d</h2>
+          <h2 style={{ marginBottom: 10 }}>
+            Tipo: {categorias.find(c => c.tipo === categoriaSelecionada)?.nome}
+          </h2>
 
-        d<div
+          <div
             style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
-            gap: 20
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+              gap: 20
             }}
-        >
+          >
             {pokemons.map((p) => {
-            const id = getPokemonId(p.pokemon.url);
+              // Na API de Type, o objeto vem aninhado em p.pokemon
+              const nome = p.pokemon.name;
+              const url = p.pokemon.url;
+              const id = getPokemonId(url);
 
-            return (
+              return (
                 <div
-                key={id}
-                onClick={() => navigate(`/detalhes/${id}`)}
-                style={{
+                  key={id}
+                  // AQUI: Ao clicar, salvamos o nome para abrir o Modal
+                  onClick={() => setPokemonSelecionado(nome)}
+                  style={{
                     padding: 10,
                     border: "1px solid #ddd",
                     borderRadius: 10,
                     textAlign: "center",
                     cursor: "pointer",
-                    background: "#fff"
-                }}
+                    background: "#fff",
+                    boxShadow: "0 2px 5px rgba(0,0,0,0.1)"
+                  }}
                 >
-                <img
+                  <img
                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
-                    alt={p.pokemon.name}
-                />
-                <p style={{ marginTop: 10, textTransform: "capitalize" }}>
-                    {p.pokemon.name}
-                </p>
+                    alt={nome}
+                    style={{ width: "100px", height: "100px" }}
+                  />
+                  <p style={{ marginTop: 10, textTransform: "capitalize", fontWeight: "bold" }}>
+                    {nome}
+                  </p>
                 </div>
-            );
+              );
             })}
-        </div>
+          </div>
         </>
-    )}
+      )}
+
+      {/* COMPONENTE MODAL (Reutilizado) */}
+      {pokemonSelecionado && (
+        <Modal 
+          nomePokemon={pokemonSelecionado} 
+          fecharModal={() => setPokemonSelecionado(null)} 
+        />
+      )}
     </div>
-);
+  );
 }
