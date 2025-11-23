@@ -1,67 +1,37 @@
-import { Box, Grid } from "@mui/material";
-import { Container } from "@mui/system";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Navbar from "../componentes/NavBar";
-import PokemonCard from "../componentes/PokemonCards";
-import { Skeletons } from "../componentes/Skeletons";
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Home.css"; // opcional ALAN
 
-const Home = ({ setPokemonData }) => {
-  const [pokemons, setPokemons] = useState([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    getPokemons();
-  }, []);
-
-  const getPokemons = () => {
-    var endpoints = [];
-    for (var i = 1; i < 200; i++) {
-      endpoints.push(`https://pokeapi.co/api/v2/pokemon/${i}/`);
-    }
-    axios.all(endpoints.map((endpoint) => axios.get(endpoint))).then((res) => setPokemons(res));
-  };
-
-  const pokemonFilter = (name) => {
-    var filteredPokemons = [];
-    if (name === "") {
-      getPokemons();
-    }
-    for (var i in pokemons) {
-      if (pokemons[i].data.name.includes(name)) {
-        filteredPokemons.push(pokemons[i]);
-      }
-    }
-
-    setPokemons(filteredPokemons);
-  };
-
-  const pokemonPickHandler = (pokemonData) => {
-    setPokemonData(pokemonData);
-    navigate("/profile");
-  };
-
+export default function Home() {
   return (
-    <div>
-      <Navbar pokemonFilter={pokemonFilter} />
-      <Container maxWidth={false}>
-        <Grid container spacing={3}>
-          {pokemons.length === 0 ? (
-            <Skeletons />
-          ) : (
-            pokemons.map((pokemon, key) => (
-              <Grid item xs={12} sm={6} md={4} lg={2} key={key}>
-                <Box onClick={() => pokemonPickHandler(pokemon.data)}>
-                  <PokemonCard name={pokemon.data.name} image={pokemon.data.sprites.front_default} types={pokemon.data.types} />
-                </Box>
-              </Grid>
-            ))
-          )}
-        </Grid>
-      </Container>
+    <div className="home-container">
+
+      {/* MENU SUPERIOR */}
+      <header className="menu">
+        <Link to="/" className="logo">
+          <img 
+            src="/images/pokeball.png"
+            alt="Home"
+            className="pokeball"
+          />
+        </Link>
+
+        <nav>
+          <Link to="/geracoes" className="menu-item">Gerações</Link>
+          <Link to="/categorias" className="menu-item">Categorias</Link>
+        </nav>
+      </header>
+
+      {/* CONTEÚDO CENTRAL */}
+      <main className="home-content">
+        <h1>Pokédex React</h1>
+        <p>Bem-vindo! Escolha uma opção no menu para navegar.</p>
+
+        <div className="home-buttons">
+          <Link to="/geracoes" className="btn">Pokémons por Geração</Link>
+          <Link to="/categorias" className="btn">Pokémons por Categoria</Link>
+        </div>
+      </main>
     </div>
   );
-};
-
-export default Home;
+}
