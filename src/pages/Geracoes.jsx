@@ -10,9 +10,10 @@ function Geracoes() {
   // Função auxiliar para pegar o ID da URL que a API retorna
   // A URL vem assim: "https://pokeapi.co/api/v2/pokemon-species/25/"
   const pegarIdDaUrl = (url) => {
-    const partes = url.split('/');
-    // O ID geralmente é o penúltimo item porque a url termina com /
-    return partes[partes.length - 2];
+    if (!url) return null;
+    const partes = url.split('/').filter(Boolean);
+    // O ID geralmente é o último item após filtrar partes vazias
+    return partes[partes.length - 1];
   };
 
   useEffect(() => {
@@ -61,12 +62,23 @@ function Geracoes() {
         <div className="lista-pokemon">
           {pokemons.map((pokemon) => {
             const id = pegarIdDaUrl(pokemon.url);
-            const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+            const imgUrl = id
+              ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+              : "";
+
+            const displayName = pokemon.name ? pokemon.name.replace(/-/g, ' ') : '—';
 
             return (
-              <div key={pokemon.name} className="card-pokemon" onClick={() => alert(`Aqui abrirá o modal do ${pokemon.name}`)}>
-                <img src={imgUrl} alt={pokemon.name} />
-                <p>{pokemon.name}</p>
+              <div
+                key={id || pokemon.name}
+                className="card-pokemon"
+                role="button"
+                tabIndex={0}
+                onClick={() => alert(`Aqui abrirá o modal do ${displayName}`)}
+                onKeyDown={(e) => e.key === 'Enter' && alert(`Aqui abrirá o modal do ${displayName}`)}
+              >
+                {imgUrl ? <img src={imgUrl} alt={displayName} /> : <div style={{height:100}} />}
+                <p style={{ textTransform: 'capitalize' }}>{displayName}</p>
               </div>
             );
           })}
