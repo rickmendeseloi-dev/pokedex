@@ -1,19 +1,39 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Home from "./pages/Home";
-import Geracoes from "./pages/Geracoes";
-import Categorias from "./pages/Categorias"; // <--- Importe aqui
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
+import NavBar from './componentes/NavBar';
+import PokemonCard from './componentes/PokemonCards';
+import { Container, Grid } from '@mui/material';
 
 function App() {
   return (
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/geracoes" element={<Geracoes />} />
-        {/* Adicione esta linha abaixo */}
-        <Route path="/categorias" element={<Categorias />} />
-      </Routes>
+    <div>
+      <NavBar />;
+      <Container maxWidth="false">
+        <Grid container>
+          <Grid item xs={3}>
+          <PokemonCard />
+          </Grid>
+          <Grid item xs={3}>
+          <PokemonCard />
+          </Grid>
+          <Grid item xs={3}>
+          <PokemonCard />
+          </Grid>
+          <Grid item xs={3}>
+          <PokemonCard />
+          </Grid>
+        </Grid>
+        
+      </Container>
+      
+    </div>
+    
+
   );
+   
+  
 }
 
-export default App;
+export default App
