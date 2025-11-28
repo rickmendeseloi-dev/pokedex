@@ -1,20 +1,22 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Geracoes from "./pages/Geracoes";
-import Categorias from "./pages/Categorias"; // <--- Importe aqui
+import Categorias from "./pages/Categorias";
+import Profile from "./pages/Profile";
 
 function App() {
-  return (
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/geracoes" element={<Geracoes />} />
-        {/* Adicione esta linha abaixo */}
-        <Route path="/categorias" element={<Categorias />} />
-      </Routes>
+  const [pokemonData, setPokemonData] = useState(null);
 
+  return (
+    <Routes>
+      <Route path="/" element={<Home setPokemonData={setPokemonData} />} />
+      <Route path="/geracoes" element={<Geracoes />} />
+      <Route path="/categorias" element={<Categorias />} />
+      <Route path="/profile" element={<Profile pokemonData={pokemonData} />} />
+    </Routes>
   );
 }
 
-export default App
+export default App;
