@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 // Removi o useNavigate porque vamos usar o Modal, igual na tela de Gerações
 // Mude de "components" para "componentes"
-import Modal from "../componentes/Modal";
+import Modal from "../componentes/Modal/index.jsx";
 
 export default function Categorias() {
   // LISTA EM PORTUGUÊS → API EM INGLÊS
