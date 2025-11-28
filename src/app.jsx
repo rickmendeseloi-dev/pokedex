@@ -12,10 +12,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home setPokemonData={setPokemonData} />} />
         <Route path="/geracoes" element={<Geracoes />} />
-        {/* Adicione esta linha abaixo */}
         <Route path="/categorias" element={<Categorias />} />
+        <Route path="/profile" element={<Profile pokemonData={pokemonData} />} />
+        <Route path="/profile/:id" element={<Profile pokemonData={pokemonData} />} />
       </Routes>
     </BrowserRouter>
   );

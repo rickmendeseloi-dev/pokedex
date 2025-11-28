@@ -1,12 +1,18 @@
 import { Chip, Container, Divider, Paper, Typography, Button } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Navbar from "../componentes/NavBar/index.jsx";
 import PokemonTable from "../componentes/PokemonTable/index.jsx";
 
 export default function Profile({ pokemonData }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const params = useParams();
+
+  // local copy of pokemon (may come from props, location.state, route param, or fetched)
+  const [localPokemon, setLocalPokemon] = useState(pokemonData || location.state?.pokemon || null);
+
   const [species, setSpecies] = useState(null);
   const [evolutions, setEvolutions] = useState([]);
   const [evolutionDetails, setEvolutionDetails] = useState([]);
@@ -16,21 +22,35 @@ export default function Profile({ pokemonData }) {
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [error, setError] = useState(null);
 
+  // if we don't have a pokemon yet, but there's a route param or query, fetch it
   useEffect(() => {
-    if (!pokemonData) {
-      navigate("/");
+    const idOrName = params.id || new URLSearchParams(location.search).get("id");
+    const fetchPokemon = async (idOrName) => {
+      try {
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${idOrName}`);
+        if (!res.ok) throw new Error('failed to fetch pokemon');
+        const data = await res.json();
+        setLocalPokemon(data);
+      } catch (err) {
+        console.error(err);
+        setError('Não foi possível carregar o Pokémon.');
+      }
+    };
+
+    if (!localPokemon && idOrName) {
+      fetchPokemon(idOrName);
     }
-  }, [pokemonData, navigate]);
+  }, [params, location, localPokemon]);
 
   useEffect(() => {
-    if (!pokemonData) return;
+    if (!localPokemon) return;
 
     const fetchSpeciesAndEvolutions = async () => {
       setLoadingDetails(true);
       setError(null);
       try {
         // fetch species details (contains flavor text and evolution chain)
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonData.id}/`);
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${localPokemon.id}/`);
         if (!res.ok) throw new Error("failed to fetch species");
         const sp = await res.json();
         setSpecies(sp);
@@ -83,11 +103,19 @@ export default function Profile({ pokemonData }) {
     };
 
     fetchSpeciesAndEvolutions();
-  }, [pokemonData]);
+  }, [localPokemon]);
 
-  if (!pokemonData) return null;
+  if (!localPokemon) return (
+    <>
+      <Navbar hideSearch />
+      <Container maxWidth="md" sx={{ mt: 3 }}>
+        <Button variant="text" onClick={() => navigate(-1)} sx={{ mb: 2 }}>Voltar</Button>
+        <Typography>Nenhum Pokémon selecionado. Acesse pela Home ou abra <code>/profile/:id</code></Typography>
+      </Container>
+    </>
+  );
 
-  const { name, sprites, moves } = pokemonData || {};
+  const { name, sprites, moves } = localPokemon || {};
 
   return (
     <>
