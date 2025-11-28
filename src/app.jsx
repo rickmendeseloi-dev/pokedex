@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Geracoes from "./pages/Geracoes";
@@ -10,13 +10,14 @@ function App() {
   const [pokemonData, setPokemonData] = useState(null);
 
   return (
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/geracoes" element={<Geracoes />} />
         {/* Adicione esta linha abaixo */}
         <Route path="/categorias" element={<Categorias />} />
       </Routes>
-
+    </BrowserRouter>
   );
 }
 
