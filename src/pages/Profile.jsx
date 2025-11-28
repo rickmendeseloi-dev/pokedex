@@ -2,8 +2,8 @@ import { Chip, Container, Divider, Paper, Typography, Button } from "@mui/materi
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../componentes/NavBar";
-import PokemonTable from "../componentes/PokemonTable";
+import Navbar from "../componentes/NavBar/index.jsx";
+import PokemonTable from "../componentes/PokemonTable/index.jsx";
 
 export default function Profile({ pokemonData }) {
   const navigate = useNavigate();
