@@ -1,92 +1,74 @@
+/* ============================
+    CONTAINER GERAL
+============================ */
 .home-container {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #f7f7f7;
-  height: 100vh;
-} 
-
-.menu {
   display: flex;
-  justify-content: space-between;
-  padding: 15px 40px;
-  background-color: #ef5350;
-  align-items: center;
-}
-
-.pokeball {
-  width: 55px;
-  cursor: pointer;
-  transition: 0.6s;
-}
-
-.pokeball:hover {
-  transform: rotate(20deg);
-}
-
-.menu-item {
-  margin: 0 15px;
-  font-size: 18px;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.menu-item:hover {
-  text-decoration: underline;
+  justify-content: center;
+  width: 100%;
+  padding-top: 80px;
+  background: linear-gradient(180deg, #f7f7f7, #e3e3e3);
+  min-height: 100vh;
 }
 
 .home-content {
-  margin-top: 40px;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
 }
 
-.home-buttons .btn {
+/* ============================
+    TÍTULO POKÉDEX
+============================ */
+.home-content h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #e3350d; /* Vermelho Pokémon */
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 0 #00000020;
+  letter-spacing: 2px;
+}
+
+/* ============================
+    BOTÃO DE CATEGORIAS
+============================ */
+.btn {
   display: inline-block;
-  margin: 15px;
-  padding: 12px 22px;
-  background-color: #42a5f5;
-  color: white;
-  border-radius: 8px;
+  padding: 10px 18px;
+  background: #ffcb05; /* Amarelo Pokémon */
+  color: #222;
+  font-weight: bold;
+  border-radius: 10px;
+  border: 2px solid #2a75bb;
   text-decoration: none;
-  font-size: 18px;
-  transition: 0.2s;
+  transition: 0.2s ease-in-out;
 }
 
 .btn:hover {
-  background-color: #1e88e5;
+  transform: scale(1.05);
+  background: #ffd633;
 }
 
-/* Grid of pokemon cards */
+/* ============================
+    GRID DE CARDS
+============================ */
 .grid-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 18px;
-  justify-items: center;
-  align-items: start;
-  padding: 12px 40px 60px 40px;
-}
-
-/* Make the page body look cleaner */
-.home-container {
-  min-height: 100vh;
-  background: linear-gradient(180deg, #f3f7fb 0%, #ffffff 40%);
-}
-
-.home-content > h1 {
-  font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto;
-  font-weight: 800;
-  color: #2b2b2b;
-  margin-bottom: 8px;
-}
-
-.home-content .btn {
-  background: linear-gradient(90deg,#ff8a65,#ff7043);
-  box-shadow: 0 6px 18px rgba(255,112,67,0.18);
-}
-
-.grid-cards > div {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 25px;
   width: 100%;
-  display: flex;
-  justify-content: center;
+  margin-top: 20px;
 }
 
-.card-clickable { cursor: pointer; }
+/* ============================
+    CARD CLICÁVEL
+============================ */
+.card-clickable {
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.card-clickable:hover {
+  transform: scale(1.06);
+  filter: brightness(1.1);
+}
