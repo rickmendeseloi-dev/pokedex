@@ -8,12 +8,16 @@ import PokemonCard from "../componentes/PokemonCards/index.jsx";
 export default function Home({ setPokemonData }) {
   const [pokemons, setPokemons] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [generationLimit, setGenerationLimit] = useState(1);
+  const [error, setError] = useState(null);
+  const [loadedCount, setLoadedCount] = useState(0);
+  const [generationLimit, setGenerationLimit] = useState(4);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getPokemonsByGenerations = async () => {
       setLoading(true);
+      setError(null);
+      setLoadedCount(0);
       try {
         // fetch generation endpoints 1..generationLimit to get species lists
         const genEndpoints = [];
@@ -29,12 +33,16 @@ export default function Home({ setPokemonData }) {
           });
         });
 
-        // fetch each pokemon detail by species name
-        const detailResponses = await Promise.all(speciesNames.map((name) => axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)));
-        const list = detailResponses.map((r) => r.data).sort((a, b) => a.id - b.id);
+        // fetch each pokemon detail by species name but tolerate failures
+        const promises = speciesNames.map((name) => axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`));
+        const settled = await Promise.allSettled(promises);
+        const successes = settled.filter(r => r.status === 'fulfilled').map(r => r.value.data);
+        setLoadedCount(successes.length);
+        const list = successes.sort((a, b) => a.id - b.id);
         setPokemons(list);
       } catch (err) {
         console.error(err);
+        setError('Erro ao carregar pokémons. Veja o console para mais detalhes.');
       } finally {
         setLoading(false);
       }
@@ -57,27 +65,25 @@ export default function Home({ setPokemonData }) {
           <div style={{ marginBottom: 12, display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center' }}>
             <Link to="/categorias" className="btn">Ver por Categorias</Link>
             <Link to="/geracoes" className="btn">Ver por Gerações</Link>
-
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <label htmlFor="generation-select" style={{ fontWeight: 700 }}>Mostrar até Geração</label>
-              <select id="generation-select" value={generationLimit} onChange={(e) => setGenerationLimit(Number(e.target.value))}>
-                {[1,2,3,4,5,6,7,8,9].map(g => (
-                  <option key={g} value={g}>{g}</option>
-                ))}
-              </select>
-            </div>
           </div>
 
           {loading ? (
             <p>Carregando pokémons...</p>
+          ) : error ? (
+            <p style={{ color: 'red' }}>{error}</p>
+          ) : pokemons.length === 0 ? (
+            <p>Nenhum pokémon disponível.</p>
           ) : (
-            <div className="grid-cards" style={{ padding: '0 40px' }}>
-              {pokemons.map((p) => (
-                <div key={p.id} className="card-clickable" onClick={() => pokemonPickHandler(p)}>
-                  <PokemonCard id={p.id} name={p.name} image={p.sprites.front_default} types={p.types} />
-                </div>
-              ))}
-            </div>
+            <>
+              <p style={{ marginBottom: 8, fontWeight: 700 }}>Mostrando {loadedCount} pokémons (até geração {generationLimit})</p>
+              <div className="grid-cards" style={{ padding: '0 40px' }}>
+                {pokemons.map((p) => (
+                  <div key={p.id} className="card-clickable" onClick={() => pokemonPickHandler(p)}>
+                    <PokemonCard id={p.id} name={p.name} image={p.sprites.front_default} types={p.types} />
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </main>
       </div>
