@@ -68,7 +68,11 @@
 /* Make the page body look cleaner */
 .home-container {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f3f7fb 0%, #ffffff 40%);
+  /* background image (fallback to gradient if missing) */
+  background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.9)), url('../assets/img/imgpokemon.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
 }
 
 .home-content > h1 {
