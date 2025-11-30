@@ -49,8 +49,10 @@
 /* ==== GRID DOS CARDS ==== */
 .grid-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 32px;
+  justify-items: center;
+  align-items: start;
   margin-top: 25px;
 }
 
@@ -59,6 +61,8 @@
   cursor: pointer;
   border-radius: 12px;
   transition: 0.2s;
+  width: 100%;
+  max-width: 220px;
 }
 
 /* animação Pokémon */
