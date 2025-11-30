@@ -62,10 +62,13 @@
 /* GRID */
 .pokemon-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 32px;
+    justify-items: center;
+    align-items: start;
     padding: 0 40px;
     margin-bottom: 40px;
+    width: 100%;
 }
 
 /* CARD */
@@ -80,6 +83,8 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    width: 100%;
+    max-width: 220px;
 }
 
 .pokemon-card::before {
