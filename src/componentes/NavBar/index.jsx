@@ -9,7 +9,7 @@ export default function Navbar({ pokemonFilter = () => {}, hideSearch = false })
   const { isDark, toggleTheme } = useTheme();
 
   return (
-    <header style={{ background: '#e40f0fff', color: '#fff', padding: '10px 16px' }}>
+    <header style={{ background: '#e40f0fff', color: '#ffffffff', padding: '10px 16px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           
@@ -38,25 +38,30 @@ export default function Navbar({ pokemonFilter = () => {}, hideSearch = false })
           <button
             onClick={toggleTheme}
             style={{
-              background: 'rgba(255, 255, 255, 0.2)',
+              background: isDark ? '#f7d82cff' : '#2c3e50',
               border: '2px solid #fff',
-              color: '#fff',
-              borderRadius: '8px',
-              padding: '8px 14px',
+              color: '#e41919ff',
+              borderRadius: '20px',
+              padding: '10px 16px',
               cursor: 'pointer',
-              fontSize: '20px',
+              fontSize: '16px',
+              fontWeight: 'bold',
               transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
             }}
             onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.3)';
-              e.target.style.transform = 'scale(1.1)';
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
             }}
             onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.2)';
               e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = 'none';
             }}
           >
-            {isDark ? '✨' : '🌙'}
+            <span>{isDark ? '☀️' : '🌙'}</span>
+            <span>{isDark ? 'Claro' : 'Escuro'}</span>
           </button>
         </div>
       </div>
