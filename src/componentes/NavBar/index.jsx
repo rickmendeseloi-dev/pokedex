@@ -25,12 +25,15 @@ export default function Navbar({ pokemonFilter = () => {}, hideSearch = false })
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {!hideSearch && (
-            <input
-              type="text"
-              placeholder="Pesquisar..."
-              onChange={(e) => pokemonFilter(e.target.value)}
-              style={{ padding: '8px 12px', borderRadius: 6, border: 'none', width: 200 }}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 6, paddingRight: '8px' }}>
+              <input
+                type="text"
+                placeholder="Pesquisar..."
+                onChange={(e) => pokemonFilter(e.target.value)}
+                style={{ padding: '8px 12px', border: 'none', width: 180, borderRadius: '6px 0 0 6px', outline: 'none' }}
+              />
+              <span style={{ fontSize: '18px', cursor: 'pointer' }}>🔍</span>
+            </div>
           )}
           <button
             onClick={toggleTheme}
@@ -39,20 +42,21 @@ export default function Navbar({ pokemonFilter = () => {}, hideSearch = false })
               border: '2px solid #fff',
               color: '#fff',
               borderRadius: '8px',
-              padding: '8px 16px',
+              padding: '8px 14px',
               cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '16px',
+              fontSize: '20px',
               transition: 'all 0.3s ease',
             }}
             onMouseEnter={(e) => {
               e.target.style.background = 'rgba(255, 255, 255, 0.3)';
+              e.target.style.transform = 'scale(1.1)';
             }}
             onMouseLeave={(e) => {
               e.target.style.background = 'rgba(255, 255, 255, 0.2)';
+              e.target.style.transform = 'scale(1)';
             }}
           >
-            {isDark ? '☀️ Claro' : '🌙 Escuro'}
+            {isDark ? '✨' : '🌙'}
           </button>
         </div>
       </div>
