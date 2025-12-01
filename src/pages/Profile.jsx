@@ -1,172 +1,226 @@
-import { Chip, Container, Divider, Paper, Typography, Button } from "@mui/material";
-import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Navbar from "../componentes/NavBar/index.jsx";
-import PokemonTable from "../componentes/PokemonTable/index.jsx";
+import "./Profile.css"; // Importando o CSS novo
+
+// Cores (Mesmo padrão da Home)
+const typeColors = {
+  grass: '#78C850', grama: '#78C850',
+  fire: '#F08030', fogo: '#F08030',
+  water: '#6890F0', agua: '#6890F0',
+  bug: '#A8B820', inseto: '#A8B820',
+  normal: '#A8A878',
+  poison: '#A040A0', veneno: '#A040A0',
+  electric: '#F8D030', eletrico: '#F8D030',
+  ground: '#E0C068', terra: '#E0C068',
+  fairy: '#EE99AC', fada: '#EE99AC',
+  fighting: '#C03028', lutador: '#C03028',
+  psychic: '#F85888', psiquico: '#F85888',
+  rock: '#B8A038', pedra: '#B8A038',
+  ghost: '#705898', fantasma: '#705898',
+  ice: '#98D8D8', gelo: '#98D8D8',
+  dragon: '#7038F8', dragao: '#7038F8',
+  steel: '#B8B8D0', aco: '#B8B8D0',
+  flying: '#A890F0', voador: '#A890F0',
+};
+
+// Tradução de Stats
+const statNames = {
+  hp: "HP",
+  attack: "Ataque",
+  defense: "Defesa",
+  "special-attack": "Sp. Atk",
+  "special-defense": "Sp. Def",
+  speed: "Velocidade"
+};
 
 export default function Profile({ pokemonData }) {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
 
-  // local copy of pokemon (may come from props, location.state, route param, or fetched)
   const [localPokemon, setLocalPokemon] = useState(pokemonData || location.state?.pokemon || null);
-
-  const [species, setSpecies] = useState(null);
-  const [evolutions, setEvolutions] = useState([]);
-  const [evolutionDetails, setEvolutionDetails] = useState([]);
   const [flavorText, setFlavorText] = useState("");
-  const [generation, setGeneration] = useState("");
-  const [habitat, setHabitat] = useState("");
-  const [loadingDetails, setLoadingDetails] = useState(false);
-  const [error, setError] = useState(null);
+  const [evolutionDetails, setEvolutionDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // if we don't have a pokemon yet, but there's a route param or query, fetch it
+  // 1. Fetch do Pokemon Principal (se não vier via props/state)
   useEffect(() => {
-    const idOrName = params.id || new URLSearchParams(location.search).get("id");
-    const fetchPokemon = async (idOrName) => {
-      try {
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${idOrName}`);
-        if (!res.ok) throw new Error('failed to fetch pokemon');
-        const data = await res.json();
-        setLocalPokemon(data);
-      } catch (err) {
-        console.error(err);
-        setError('Não foi possível carregar o Pokémon.');
-      }
-    };
-
+    const idOrName = params.id;
     if (!localPokemon && idOrName) {
-      fetchPokemon(idOrName);
+      fetch(`https://pokeapi.co/api/v2/pokemon/${idOrName}`)
+        .then(res => res.json())
+        .then(data => setLocalPokemon(data))
+        .catch(err => console.error("Erro ao buscar pokemon:", err));
     }
-  }, [params, location, localPokemon]);
+  }, [params, localPokemon]);
 
+  // 2. Fetch de Detalhes (Espécie, Descrição e Evoluções)
   useEffect(() => {
     if (!localPokemon) return;
 
-    const fetchSpeciesAndEvolutions = async () => {
-      setLoadingDetails(true);
-      setError(null);
+    const fetchDetails = async () => {
+      setLoading(true);
       try {
-        // fetch species details (contains flavor text and evolution chain)
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${localPokemon.id}/`);
-        if (!res.ok) throw new Error("failed to fetch species");
-        const sp = await res.json();
-        setSpecies(sp);
+        // Busca Species
+        const speciesRes = await fetch(localPokemon.species.url);
+        const speciesData = await speciesRes.json();
 
-        // flavor text prefer Portuguese if available
-        const entry = sp.flavor_text_entries.find(e => e.language.name === 'pt') || sp.flavor_text_entries.find(e => e.language.name === 'en');
-        setFlavorText(entry ? entry.flavor_text.replace(/\n|\f/g, ' ') : 'Descrição não disponível.');
+        // Descrição em inglês (ou pt se tiver sorte)
+        const entry = speciesData.flavor_text_entries.find(e => e.language.name === 'en'); // A API falha muito em PT, melhor garantir EN
+        setFlavorText(entry ? entry.flavor_text.replace(/\f/g, ' ') : "No description available.");
 
-        setGeneration(sp.generation?.name || '');
-        setHabitat(sp.habitat?.name || '');
+        // Cadeia de Evolução
+        const evoRes = await fetch(speciesData.evolution_chain.url);
+        const evoData = await evoRes.json();
 
-        // fetch evolution chain
-        if (sp.evolution_chain && sp.evolution_chain.url) {
-          const evoRes = await fetch(sp.evolution_chain.url);
-          if (!evoRes.ok) throw new Error('failed to fetch evolution chain');
-          const evoData = await evoRes.json();
+        const evoChain = [];
+        let evoDataRecursive = evoData.chain;
 
-          const evoList = [];
-          const traverse = (node) => {
-            if (!node) return;
-            evoList.push(node.species.name);
-            if (node.evolves_to && node.evolves_to.length) {
-              node.evolves_to.forEach(child => traverse(child));
-            }
-          };
-          traverse(evoData.chain);
-          setEvolutions(evoList);
+        do {
+          const evoDetails = evoDataRecursive['evolution_details'][0];
+          const pokeName = evoDataRecursive.species.name;
+          
+          // Pega ID para montar imagem
+          const idFromUrl = evoDataRecursive.species.url.split('/')[6];
+          
+          evoChain.push({
+            name: pokeName,
+            id: idFromUrl,
+            image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${idFromUrl}.png`
+          });
 
-          // fetch basic details for each evolution (to get sprite)
-          const details = await Promise.all(
-            evoList.map(async (name) => {
-              try {
-                const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-                if (!r.ok) return { name };
-                const d = await r.json();
-                return { name, sprite: d.sprites?.front_default, id: d.id };
-              } catch {
-                return { name };
-              }
-            })
-          );
-          setEvolutionDetails(details);
-        }
-      } catch (err) {
-        console.error(err);
-        setError('Erro ao carregar dados adicionais.');
+          evoDataRecursive = evoDataRecursive['evolves_to'][0];
+        } while (!!evoDataRecursive && evoDataRecursive.hasOwnProperty('evolves_to'));
+
+        setEvolutionDetails(evoChain);
+
+      } catch (error) {
+        console.error("Erro detalhes:", error);
       } finally {
-        setLoadingDetails(false);
+        setLoading(false);
       }
     };
 
-    fetchSpeciesAndEvolutions();
+    fetchDetails();
   }, [localPokemon]);
 
-  if (!localPokemon) return (
-    <>
-      <Navbar hideSearch />
-      <Container maxWidth="md" sx={{ mt: 3 }}>
-        <Button variant="text" onClick={() => navigate(-1)} sx={{ mb: 2 }}>Voltar</Button>
-        <Typography>Nenhum Pokémon selecionado. Acesse pela Home ou abra <code>/profile/:id</code></Typography>
-      </Container>
-    </>
-  );
+  if (!localPokemon) return <div className="profile-container">Carregando...</div>;
 
-  const { name, sprites, moves } = localPokemon || {};
+  // Dados para renderizar
+  const mainType = localPokemon.types[0].type.name;
+  const themeColor = typeColors[mainType] || '#777';
+  const imgHd = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${localPokemon.id}.png`;
+
+  // Função para mudar de página ao clicar na evolução
+  const handleEvoClick = (id) => {
+    setLocalPokemon(null); // Reseta para forçar reload
+    navigate(`/profile/${id}`);
+  };
 
   return (
-    <>
-      <Navbar hideSearch />
-      <Container maxWidth="md" sx={{ mt: 3 }}>
-        <Button variant="text" onClick={() => navigate(-1)} sx={{ mb: 2 }}>Voltar</Button>
-        <Paper elevation={3}>
-          <Box display="flex" flexDirection="column" alignItems="center" p={5}>
-            <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>{name}</Typography>
+    <div>
+      <Navbar />
+      
+      <div className="profile-container" style={{ backgroundColor: themeColor + '33' }}> {/* Fundo clarinho */}
+        
+        <div className="profile-card">
+          
+          {/* HEADER COLORIDO */}
+          <div className="profile-header" style={{ backgroundColor: themeColor }}>
+            <button className="btn-voltar-profile" onClick={() => navigate(-1)}>← Voltar</button>
+            
+            <div className="poke-id">#{String(localPokemon.id).padStart(3, '0')}</div>
+            <h1 className="poke-name">{localPokemon.name}</h1>
+            
+            <div className="profile-image-container">
+              <img src={imgHd} alt={localPokemon.name} className="profile-img-hd" />
+            </div>
+          </div>
 
-            <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} alignItems="center" width="100%" gap={2} sx={{ mb: 2 }}>
-              <Box component="img" src={sprites.front_default} alt={name} sx={{ width: 200, height: 200 }} />
-              <PokemonTable pokemonData={pokemonData} />
-            </Box>
+          {/* CORPO BRANCO */}
+          <div className="profile-body">
+            
+            {/* TIPOS */}
+            <div className="profile-types">
+              {localPokemon.types.map((t) => (
+                <span 
+                  key={t.type.name} 
+                  className="type-pill"
+                  style={{ backgroundColor: typeColors[t.type.name] || '#777' }}
+                >
+                  {t.type.name}
+                </span>
+              ))}
+            </div>
 
-            <Box width="100%" sx={{ mt: 2 }}>
-              <Divider>Descrição</Divider>
-              <Typography variant="body1" sx={{ mt: 1 }}>{flavorText}</Typography>
+            {/* ABAS DE INFORMAÇÃO */}
+            <h3 className="section-title" style={{ color: themeColor }}>Sobre</h3>
+            <p style={{ textAlign: 'center', color: '#555', marginBottom: '20px', lineHeight: '1.6' }}>
+              {flavorText}
+            </p>
 
-              <Divider sx={{ mt: 2 }}>Evoluções</Divider>
-              {loadingDetails ? (
-                <Typography>Carregando evoluções...</Typography>
-              ) : error ? (
-                <Typography color="error">{error}</Typography>
-              ) : (
-                <Box display="flex" gap={2} flexWrap="wrap" sx={{ mt: 1 }}>
-                  {evolutionDetails.map((e) => (
-                    <Box key={e.name} textAlign="center">
-                      {e.sprite ? <img src={e.sprite} alt={e.name} style={{ width: 80, height: 80 }} /> : <div style={{ width: 80, height: 80 }} />}
-                      <Typography sx={{ textTransform: 'capitalize' }}>{e.name}</Typography>
-                    </Box>
-                  ))}
-                </Box>
-              )}
+            <div className="info-grid">
+              <div className="info-item">
+                <h4>Altura</h4>
+                <p>{localPokemon.height / 10} m</p>
+              </div>
+              <div className="info-item">
+                <h4>Peso</h4>
+                <p>{localPokemon.weight / 10} kg</p>
+              </div>
+              <div className="info-item">
+                <h4>Habilidade</h4>
+                <p>{localPokemon.abilities[0]?.ability.name}</p>
+              </div>
+              <div className="info-item">
+                <h4>Experiência</h4>
+                <p>{localPokemon.base_experience}</p>
+              </div>
+            </div>
 
-              <Divider sx={{ mt: 2 }}>Informações</Divider>
-              <Box sx={{ mt: 1 }}>
-                <Typography><strong>Geração:</strong> {generation}</Typography>
-                <Typography><strong>Habitat:</strong> {habitat || '—'}</Typography>
-              </Box>
+            {/* STATUS BASE (Barras) */}
+            <h3 className="section-title" style={{ color: themeColor }}>Status Base</h3>
+            <div className="stats-container">
+              {localPokemon.stats.map((s) => (
+                <div key={s.stat.name} className="stat-row">
+                  <div className="stat-name">{statNames[s.stat.name] || s.stat.name}</div>
+                  <div className="stat-value">{s.base_stat}</div>
+                  <div className="stat-bar-bg">
+                    <div 
+                      className="stat-bar-fill"
+                      style={{ 
+                        width: `${Math.min(s.base_stat, 100)}%`, // Limita visualmente a 100%
+                        backgroundColor: themeColor
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-              <Divider sx={{ mt: 2 }}>Ataques</Divider>
-              <Box textAlign="center" marginTop="15px">
-                {moves && moves.map((moveData, key) => (
-                  <Chip key={key} sx={{ m: '5px' }} label={moveData.move.name} />
-                ))}
-              </Box>
-            </Box>
-          </Box>
-        </Paper>
-      </Container>
-    </>
+            {/* EVOLUÇÕES */}
+            <h3 className="section-title" style={{ color: themeColor }}>Evoluções</h3>
+            <div className="evolutions-flex">
+              {evolutionDetails.map((evo, index) => (
+                <React.Fragment key={evo.id}>
+                  <div className="evo-item" onClick={() => handleEvoClick(evo.id)}>
+                    <img src={evo.image} alt={evo.name} />
+                    <span style={{ fontWeight: 'bold', textTransform: 'capitalize', color: '#555' }}>
+                      {evo.name}
+                    </span>
+                  </div>
+                  {/* Seta entre as evoluções, mas não no último */}
+                  {index < evolutionDetails.length - 1 && (
+                    <div className="evo-arrow">➜</div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
