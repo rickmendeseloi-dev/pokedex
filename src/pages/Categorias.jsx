@@ -15,7 +15,15 @@ export default function Categorias() {
     { nome: "Inseto", tipo: "bug" },
     { nome: "Venenoso", tipo: "poison" },
     { nome: "Normal", tipo: "normal" },
-    { nome: "Terra", tipo: "ground" }
+    { nome: "Terra", tipo: "ground" },
+    { nome: "Dragão", tipo: "dragon" },
+    { nome: "Dark", tipo: "dark" },
+    { nome: "Fantasma", tipo: "ghost" },
+    { nome: "Lutador", tipo: "fighting" },
+    { nome: "Fada", tipo: "fairy" },
+    { nome: "Rock", tipo: "rock" },
+    { nome: "Gelo", tipo: "ice" },
+    { nome: "Metal", tipo: "steel" }
   ];
 
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
