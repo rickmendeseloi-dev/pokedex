@@ -1,16 +1,51 @@
-# React + Vite
+# 🔴 Pokédex React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 
-Currently, two official plugins are available:
+Uma aplicação web interativa e responsiva que simula uma **Pokédex**, desenvolvida para listar, filtrar e exibir detalhes de Pokémon consumindo a [PokeAPI](https://pokeapi.co/). O projeto foca em uma interface moderna, navegação fluida e personalização visual.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Funcionalidades Principais
 
-## React Compiler
+- **Listagem de Pokémon:** Visualização em grid com cards personalizados e imagens em alta definição (*Official Artwork*).
+- **Busca Inteligente:** Barra de pesquisa na Navbar para filtrar Pokémon por **Nome** ou **ID** em tempo real.
+- **Filtros Avançados:**
+  - **Por Geração:** Navegue facilmente entre a 1ª até a 4ª geração.
+  - **Por Categoria (Tipo):** Filtre Pokémon por tipos (Fogo, Água, Elétrico, etc.) com cores temáticas.
+- **Perfil Detalhado:** Ao clicar em um card, veja:
+  - Status base (HP, Ataque, Defesa, etc.) com barras de progresso.
+  - Descrição (Flavor Text).
+  - Cadeia de Evoluções interativa.
+  - Cores do layout dinâmicas baseadas no tipo do Pokémon.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🌗 Destaque: Modo Claro e Escuro
 
-## Expanding the ESLint configuration
+Implementamos um sistema completo de temas (Theme Context) para melhor acessibilidade e conforto visual:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* **Tema Claro:** Interface limpa com cores vivas e o **Pikachu** como mascote no topo.
+* **Tema Escuro:** Interface confortável para ambientes com pouca luz, alterando o mascote automaticamente para o **Gengar**.
+* **Persistência:** O botão na Navbar permite alternar instantaneamente entre os modos.
+
+## 🛠️ Tecnologias Utilizadas
+
+* **React.js (Vite):** Para construção da interface e alta performance.
+* **React Router DOM:** Para gerenciamento de rotas (Home, Categorias, Gerações, Profile).
+* **Axios / Fetch API:** Para consumo de dados assíncronos da PokeAPI.
+* **Context API:** Para gerenciamento global do estado do Tema (Dark/Light).
+* **CSS3:** Estilização responsiva, Grid Layout e Variáveis CSS.
+
+## 📂 Estrutura do Projeto
+
+```bash
+src/
+├── assets/          # Imagens (Logos Pikachu/Gengar, ícones)
+├── componentes/     # Componentes reutilizáveis (NavBar, Cards)
+├── context/         # Contexto do Tema (Dark Mode)
+├── pages/           # Páginas principais:
+│   ├── Home.jsx
+│   ├── Categorias.jsx
+│   ├── Geracoes.jsx
+│   └── Profile.jsx
+├── App.jsx          # Configuração de Rotas
+└── main.jsx         # Ponto de entrada
