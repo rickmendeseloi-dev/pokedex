@@ -55,35 +55,21 @@ export default function Categorias() {
     return partes[partes.length - 2];
   }
 
-  // Lógica Corrigida de Navegação
-  const handlePokemonClick = (p) => {
-    // Montamos o objeto padrão que o Profile espera
-    const id = getPokemonId(p.pokemon.url);
-    const pokemonObject = {
-        id: parseInt(id),
-        name: p.pokemon.name,
-        types: p.pokemon.types, // Já buscamos isso no useEffect abaixo
-        // Adiciona sprites básicos para evitar erro se o Profile tentar ler
-        sprites: {
-            front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-            other: {
-                "official-artwork": {
-                    front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
-                }
-            }
-        }
-    };
-
-    // Agora enviamos o objeto completo no state
-    navigate(`/profile/${id}`, { state: { pokemon: pokemonObject } });
+  // === CORREÇÃO DA TELA BRANCA ===
+  // Não enviamos mais o objeto incompleto no 'state'.
+  // Apenas navegamos para a URL certa. O Profile vai baixar os dados completos sozinho.
+  const handlePokemonClick = (id) => {
+    navigate(`/profile/${id}`);
   };
 
   useEffect(() => {
     if (!categoriaSelecionada) return;
 
+    // Busca lista de pokemons daquele tipo
     fetch(`https://pokeapi.co/api/v2/type/${categoriaSelecionada}`)
       .then((res) => res.json())
       .then((data) => {
+        // Mapeia e busca detalhes básicos (só pra ter a imagem e os tipos no card)
         const pokemonPromises = data.pokemon.map((p) => {
           const id = getPokemonId(p.pokemon.url);
           if(parseInt(id) > 10000) return null; 
@@ -143,14 +129,15 @@ export default function Categorias() {
                 const url = p.pokemon.url;
                 const id = getPokemonId(url);
                 const types = p.pokemon.types || [];
+                // Imagem HD
                 const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
                 return (
                   <div
                     key={id}
                     className="card-clickable"
-                    // Passamos o objeto 'p' inteiro para a função
-                    onClick={() => handlePokemonClick(p)}
+                    // Passamos APENAS o ID. Isso evita o erro no Profile.
+                    onClick={() => handlePokemonClick(id)}
                   >
                     <img src={imgUrl} alt={nome} loading="lazy" />
                     <h3>
