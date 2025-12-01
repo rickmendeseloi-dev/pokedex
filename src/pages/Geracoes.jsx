@@ -1,73 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Geracoes.css'; // Vamos criar esse CSS no passo 3
+import './Geracoes.css';
+
+// Cores dos tipos (Padronizado)
+const TYPE_COLORS = {
+  grass: '#78C850', grama: '#78C850',
+  fire: '#F08030', fogo: '#F08030',
+  water: '#6890F0', agua: '#6890F0', água: '#6890F0',
+  bug: '#A8B820', inseto: '#A8B820',
+  normal: '#A8A878',
+  poison: '#A040A0', veneno: '#A040A0',
+  electric: '#F8D030', eletrico: '#F8D030', elétrico: '#F8D030',
+  ground: '#E0C068', terra: '#E0C068',
+  fairy: '#EE99AC', fada: '#EE99AC',
+  fighting: '#C03028', lutador: '#C03028',
+  psychic: '#F85888', psiquico: '#F85888', psíquico: '#F85888',
+  rock: '#B8A038', pedra: '#B8A038',
+  ghost: '#705898', fantasma: '#705898',
+  ice: '#98D8D8', gelo: '#98D8D8',
+  dragon: '#7038F8', dragao: '#7038F8', dragão: '#7038F8',
+  steel: '#B8B8D0', aco: '#B8B8D0', aço: '#B8B8D0',
+  flying: '#A890F0', voador: '#A890F0',
+  dark: '#705746',
+};
 
 function Geracoes() {
   const [pokemons, setPokemons] = useState([]);
-  const [geracaoAtual, setGeracaoAtual] = useState(1); // Começa na geração 1
+  const [geracaoAtual, setGeracaoAtual] = useState(1);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Cores dos tipos (igual Home e Categorias)
-  const TYPE_COLORS = {
-    grass: '#7AC74C',
-    fire: '#EE8130',
-    water: '#6390F0',
-    bug: '#A6B91A',
-    normal: '#A8A77A',
-    poison: '#A33EA1',
-    electric: '#F7D02C',
-    ground: '#E2BF65',
-    fairy: '#D685AD',
-    fighting: '#C22E28',
-    psychic: '#F95587',
-    rock: '#B6A136',
-    ghost: '#735797',
-    ice: '#96D9D6',
-    dragon: '#6F35FC',
-    dark: '#705746',
-    steel: '#B7B7CE',
-    flying: '#A98FF3',
-  };
-
-  function capitalize(s) {
-    if (!s) return '';
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }
-
-  // Função auxiliar para pegar o ID da URL que a API retorna
-  // A URL vem assim: "https://pokeapi.co/api/v2/pokemon-species/25/"
+  // Função para pegar ID da URL (caso precise)
   const pegarIdDaUrl = (url) => {
     if (!url) return null;
     const partes = url.split('/').filter(Boolean);
-    // O ID geralmente é o último item após filtrar partes vazias
     return partes[partes.length - 1];
   };
 
   useEffect(() => {
-    // Essa função busca os dados sempre que 'geracaoAtual' mudar
     const carregarPokemons = async () => {
       setLoading(true);
       try {
-        // O enunciado pedia até a 4ª geração.
-        // Endpoint correto: generation/{id}
         const response = await axios.get(`https://pokeapi.co/api/v2/generation/${geracaoAtual}`);
-        
-        // A lista vem dentro de 'pokemon_species'
         const lista = response.data.pokemon_species;
         
-        // Fetch details para cada pokemon para obter seus tipos
+        // Busca detalhes para pegar imagem e tipos
         const pokemonPromises = lista.map((p) => {
           const id = pegarIdDaUrl(p.url);
+          // Filtro para evitar formas alternativas quebradas (opcional)
+          if(parseInt(id) > 10000) return null;
+
           return axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
-            .then((res) => ({
-              ...p,
-              types: res.data.types
-            }));
+            .then((res) => res.data)
+            .catch(() => null); // Se der erro num pokemon específico, ignora
         });
         
-        const enrichedPokemons = await Promise.all(pokemonPromises);
+        const results = await Promise.all(pokemonPromises);
+        // Filtra nulos e ordena por ID
+        const enrichedPokemons = results
+            .filter(p => p !== null)
+            .sort((a, b) => a.id - b.id);
+
         setPokemons(enrichedPokemons);
       } catch (error) {
         console.error("Erro ao buscar gerações:", error);
@@ -77,47 +71,23 @@ function Geracoes() {
     };
 
     carregarPokemons();
-  }, [geracaoAtual]); // O array de dependência observa a mudança do botão
+  }, [geracaoAtual]);
 
-  const handlePokemonClick = async (pokemonId) => {
-    try {
-      // Fetch the pokemon details using the ID
-      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
-      const pokemonData = response.data;
-      // Navigate to profile with the pokemon data in location state
-      navigate(`/profile/${pokemonData.id}`, { state: { pokemon: pokemonData } });
-    } catch (error) {
-      console.error("Erro ao buscar detalhes do pokémon:", error);
-      // Fallback: navigate by id if fetch fails
-      navigate(`/profile/${pokemonId}`);
-    }
+  const handlePokemonClick = (pokemon) => {
+    navigate(`/profile/${pokemon.id}`, { state: { pokemon } });
   };
 
   return (
-    <div className="container">
-      <div style={{ position: 'relative', marginBottom: 20 }}>
-        <h2 style={{ textAlign: 'center' }}>Pokémons por Geração</h2>
-        <button 
-          onClick={() => navigate('/')}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            padding: '10px 20px',
-            background: '#ff6b6b',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 8,
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            fontSize: 14
-          }}
-        >
-          ← Voltar para Home
+    <div className="geracoes-container">
+      {/* HEADER */}
+      <div className="header-geracoes">
+        <button onClick={() => navigate('/')} className="btn-voltar">
+          ← Voltar
         </button>
+        <h1>Pokémons por Geração</h1>
       </div>
 
-      {/* MENU DE GERAÇÕES (Item 4.1) */}
+      {/* MENU DE GERAÇÕES */}
       <div className="botoes-geracao">
         {[1, 2, 3, 4].map((gen) => (
           <button 
@@ -130,45 +100,44 @@ function Geracoes() {
         ))}
       </div>
 
-      {/* LISTAGEM (Item 4.1) */}
+      {/* LISTAGEM GRID */}
       {loading ? (
-        <p>Carregando...</p>
+        <p style={{textAlign: 'center', marginTop: 50}}>Carregando...</p>
       ) : (
-        <div className="lista-pokemon">
+        <div className="grid-cards">
           {pokemons.map((pokemon) => {
-            const id = pegarIdDaUrl(pokemon.url);
-            const imgUrl = id
-              ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
-              : "";
-
-            const displayName = pokemon.name ? pokemon.name.replace(/-/g, ' ') : '—';
+            // URL DA IMAGEM HD
+            const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
             const types = pokemon.types || [];
 
             return (
               <div
-                key={id || pokemon.name}
-                className="card-pokemon"
-                role="button"
-                tabIndex={0}
-                onClick={() => handlePokemonClick(id)}
-                onKeyDown={(e) => e.key === 'Enter' && handlePokemonClick(id)}
+                key={pokemon.id}
+                className="card-clickable"
+                onClick={() => handlePokemonClick(pokemon)}
               >
-                {imgUrl ? <img src={imgUrl} alt={displayName} /> : <div style={{height:100}} />}
-                <p style={{ textTransform: 'capitalize', marginBottom: 8 }}>{displayName}</p>
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {types && types.map((t) => (
+                {/* Imagem */}
+                <img src={imgUrl} alt={pokemon.name} loading="lazy" />
+                
+                {/* Nome e ID */}
+                <h3>
+                    <span style={{ color: '#999', fontSize: '0.8em', marginRight: '6px' }}>
+                        #{String(pokemon.id).padStart(3, '0')}
+                    </span>
+                    {pokemon.name}
+                </h3>
+
+                {/* Tipos Coloridos */}
+                <div className="types-wrapper">
+                  {types.map((t) => (
                     <span
                       key={t.type.name}
+                      className="type-badge"
                       style={{
-                        backgroundColor: TYPE_COLORS[t.type.name] || '#777',
-                        color: '#fff',
-                        padding: '4px 10px',
-                        borderRadius: 12,
-                        fontSize: 12,
-                        fontWeight: 600,
+                        backgroundColor: TYPE_COLORS[t.type.name] || '#777'
                       }}
                     >
-                      {capitalize(t.type.name)}
+                      {t.type.name}
                     </span>
                   ))}
                 </div>

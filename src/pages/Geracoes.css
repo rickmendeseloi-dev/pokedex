@@ -1,76 +1,127 @@
-.container {
+/* ==== CONTAINER GERAL ==== */
+.geracoes-container {
   padding: 40px 20px;
-  text-align: center;
   min-height: 100vh;
-  background: linear-gradient(180deg, #f3f7fb 0%, #ffffff 40%);
-  font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto;
+  background: #f4f4f4; /* Fundo cinza padrão */
+  font-family: 'Nunito', sans-serif;
+  text-align: center;
 }
 
-.container h2 {
+/* ==== CABEÇALHO ==== */
+.header-geracoes {
+  position: relative;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.header-geracoes h1 {
   font-size: 2.5rem;
   font-weight: 800;
   color: #2b2b2b;
-  margin-bottom: 40px;
+  margin: 0;
   letter-spacing: -0.5px;
 }
 
+/* ==== BOTÃO VOLTAR (AMARELO) ==== */
+.btn-voltar {
+  position: absolute;
+  left: 20px;
+  padding: 10px 20px;
+  background: #ffcb05;
+  color: #000;
+  border: 3px solid #000;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 14px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 0 #000;
+  z-index: 10;
+}
+
+.btn-voltar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #000;
+}
+
+.btn-voltar:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 0 #000;
+}
+
+/* ==== MENU DE GERAÇÕES ==== */
 .botoes-geracao {
   margin-bottom: 40px;
   display: flex;
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
+  padding: 0 20px;
 }
 
 .botoes-geracao button {
-  padding: 12px 28px;
+  padding: 12px 24px;
   cursor: pointer;
-  background-color: #f5f5f5;
+  background-color: #fff;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
   font-weight: 700;
   font-size: 14px;
   color: #555;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .botoes-geracao button:hover {
   border-color: #ffcb05;
-  background-color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 203, 5, 0.2);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .botoes-geracao button.ativo {
-  background: linear-gradient(135deg, #ffcb05, #ffd700);
+  background: #ffcb05; /* Amarelo Ativo */
   color: #000;
-  border-color: #ffa500;
-  font-weight: 800;
-  box-shadow: 0 8px 20px rgba(255, 203, 5, 0.3);
+  border-color: #e0b000;
+  box-shadow: 0 4px 12px rgba(255, 203, 5, 0.4);
+  transform: scale(1.05);
 }
 
-.lista-pokemon {
+/* ================================================= */
+/* ==== ESTILOS DOS CARDS (UNIFICADO) ==== */
+/* ================================================= */
+
+.grid-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 24px;
-  padding: 0 40px;
-  margin-bottom: 40px;
+  gap: 20px;
+  padding: 0 20px;
+  align-items: start;
 }
 
-.card-pokemon {
-  border: none;
+.card-clickable {
+  background: #fff;
   border-radius: 16px;
-  padding: 20px 12px;
+  padding: 20px 10px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  background: #fff;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.card-pokemon::before {
+.card-clickable:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.15);
+}
+
+/* Efeito de brilho */
+.card-clickable::before {
   content: '';
   position: absolute;
   top: 0;
@@ -80,18 +131,15 @@
   background: linear-gradient(135deg, rgba(255,203,5,0.1), rgba(255,203,5,0));
   opacity: 0;
   transition: opacity 0.3s;
+  pointer-events: none;
 }
 
-.card-pokemon:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 16px 32px rgba(0,0,0,0.15);
-}
-
-.card-pokemon:hover::before {
+.card-clickable:hover::before {
   opacity: 1;
 }
 
-.card-pokemon img {
+/* Imagem HD */
+.card-clickable img {
   width: 110px;
   height: 110px;
   object-fit: contain;
@@ -99,10 +147,34 @@
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-.card-pokemon p {
-  text-transform: capitalize;
-  font-weight: 700;
-  color: #2b2b2b;
-  margin-bottom: 10px;
+/* Nome e ID */
+.card-clickable h3 {
+  font-family: 'Nunito', sans-serif;
   font-size: 15px;
+  font-weight: 800;
+  color: #2b2b2b;
+  text-transform: capitalize;
+  margin: 0 0 10px 0;
+  text-align: center;
+  width: 100%;
+}
+
+/* Pílulas */
+.types-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.type-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: capitalize;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  white-space: nowrap;
 }
