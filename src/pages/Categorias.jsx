@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import Navbar from "../componentes/NavBar/index.jsx";
 import "./Categorias.css";
 
-// Cores dos tipos (Movi para fora para organizar)
 const TYPE_COLORS = {
   grass: '#78C850', grama: '#78C850',
   fire: '#F08030', fogo: '#F08030',
@@ -51,22 +50,33 @@ export default function Categorias() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
   const [pokemons, setPokemons] = useState([]);
 
-  // Função para navegar para o Profile
-  const handlePokemonClick = async (pokemonId) => {
-    try {
-      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
-      const pokemonData = response.data;
-      navigate(`/profile/${pokemonData.id}`, { state: { pokemon: pokemonData } });
-    } catch (error) {
-      console.error("Erro ao buscar detalhes:", error);
-      navigate(`/profile/${pokemonId}`);
-    }
-  };
-
   function getPokemonId(url) {
     const partes = url.split("/");
     return partes[partes.length - 2];
   }
+
+  // Lógica Corrigida de Navegação
+  const handlePokemonClick = (p) => {
+    // Montamos o objeto padrão que o Profile espera
+    const id = getPokemonId(p.pokemon.url);
+    const pokemonObject = {
+        id: parseInt(id),
+        name: p.pokemon.name,
+        types: p.pokemon.types, // Já buscamos isso no useEffect abaixo
+        // Adiciona sprites básicos para evitar erro se o Profile tentar ler
+        sprites: {
+            front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+            other: {
+                "official-artwork": {
+                    front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
+                }
+            }
+        }
+    };
+
+    // Agora enviamos o objeto completo no state
+    navigate(`/profile/${id}`, { state: { pokemon: pokemonObject } });
+  };
 
   useEffect(() => {
     if (!categoriaSelecionada) return;
@@ -74,10 +84,8 @@ export default function Categorias() {
     fetch(`https://pokeapi.co/api/v2/type/${categoriaSelecionada}`)
       .then((res) => res.json())
       .then((data) => {
-        // Pega todos os pokemons daquela categoria
         const pokemonPromises = data.pokemon.map((p) => {
           const id = getPokemonId(p.pokemon.url);
-          // Limitando a ID < 10000 para evitar formas "mega" ou quebradas da API que não têm imagem oficial
           if(parseInt(id) > 10000) return null; 
 
           return fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
@@ -85,11 +93,11 @@ export default function Categorias() {
             .then((details) => ({
               ...p,
               pokemon: { ...p.pokemon, types: details.types }
-            }));
+            }))
+            .catch(() => null);
         });
         
         Promise.all(pokemonPromises).then((results) => {
-            // Remove os nulos (que eram IDs muito altos)
             const enrichedPokemons = results.filter(p => p !== null);
             setPokemons(enrichedPokemons);
         });
@@ -97,86 +105,78 @@ export default function Categorias() {
   }, [categoriaSelecionada]);
 
   return (
-    <div className="categorias-container">
-      <div className="header-categorias">
-        <button onClick={() => navigate('/')} className="btn-voltar">
-          ← Voltar
-        </button>
-        <h1>Categorias</h1>
-      </div>
+    <div>
+      <Navbar />
+      <div className="categorias-container">
+        <div className="header-categorias">
+          <h1>Categorias</h1>
+        </div>
 
-      {/* MENU DAS CATEGORIAS */}
-      <div className="categorias-menu">
-        {categorias.map((cat) => (
-          <button
-            key={cat.tipo}
-            onClick={() => setCategoriaSelecionada(cat.tipo)}
-            className={categoriaSelecionada === cat.tipo ? 'cat-btn ativo' : 'cat-btn'}
-            style={{ 
-                 // Se estiver ativo, usa a cor do tipo. Se não, fica cinza.
-                 backgroundColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#f5f5f5',
-                 color: categoriaSelecionada === cat.tipo ? '#fff' : '#555',
+        <div className="categorias-menu">
+          {categorias.map((cat) => (
+            <button
+              key={cat.tipo}
+              onClick={() => setCategoriaSelecionada(cat.tipo)}
+              className={categoriaSelecionada === cat.tipo ? 'cat-btn ativo' : 'cat-btn'}
+              style={{ 
                  borderColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#e0e0e0',
-            }}
-          >
-            {cat.nome}
-          </button>
-        ))}
-      </div>
+                 color: categoriaSelecionada === cat.tipo ? '#fff' : '#555',
+                 backgroundColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#f5f5f5'
+              }}
+            >
+              {cat.nome}
+            </button>
+          ))}
+        </div>
 
-      {/* LISTA DE POKÉMONS */}
-      {categoriaSelecionada && (
-        <>
-          <h2 className="titulo-secao">
-            Tipo: <span style={{color: TYPE_COLORS[categoriaSelecionada], fontWeight: '800'}}>
-                {categorias.find(c => c.tipo === categoriaSelecionada)?.nome}
-            </span>
-          </h2>
+        {categoriaSelecionada && (
+          <>
+            <h2 className="titulo-secao">
+              Tipo: <span style={{color: TYPE_COLORS[categoriaSelecionada]}}>
+                  {categorias.find(c => c.tipo === categoriaSelecionada)?.nome}
+              </span>
+            </h2>
 
-          <div className="grid-cards">
-            {pokemons.map((p) => {
-              const nome = p.pokemon.name;
-              const url = p.pokemon.url;
-              const id = getPokemonId(url);
-              const types = p.pokemon.types || [];
-              
-              // URL da Imagem HD (Official Artwork)
-              const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+            <div className="grid-cards">
+              {pokemons.map((p) => {
+                const nome = p.pokemon.name;
+                const url = p.pokemon.url;
+                const id = getPokemonId(url);
+                const types = p.pokemon.types || [];
+                const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
-              return (
-                <div
-                  key={id}
-                  className="card-clickable"
-                  onClick={() => handlePokemonClick(id)}
-                >
-                  <img src={imgUrl} alt={nome} loading="lazy" />
-                  
-                  {/* Número e Nome */}
-                  <h3>
-                    <span style={{ color: '#999', fontSize: '0.8em', marginRight: '6px' }}>
-                        #{String(id).padStart(3, '0')}
-                    </span>
-                    {nome}
-                  </h3>
-
-                  {/* Pílulas de Tipo */}
-                  <div className="types-wrapper">
-                    {types.map((t) => (
-                      <span
-                        key={t.type.name}
-                        className="type-badge"
-                        style={{ backgroundColor: TYPE_COLORS[t.type.name] || '#777' }}
-                      >
-                        {t.type.name}
+                return (
+                  <div
+                    key={id}
+                    className="card-clickable"
+                    // Passamos o objeto 'p' inteiro para a função
+                    onClick={() => handlePokemonClick(p)}
+                  >
+                    <img src={imgUrl} alt={nome} loading="lazy" />
+                    <h3>
+                      <span style={{ color: '#999', fontSize: '0.8em', marginRight: '6px' }}>
+                          #{String(id).padStart(3, '0')}
                       </span>
-                    ))}
+                      {nome}
+                    </h3>
+                    <div className="types-wrapper">
+                      {types.map((t) => (
+                        <span
+                          key={t.type.name}
+                          className="type-badge"
+                          style={{ backgroundColor: TYPE_COLORS[t.type.name] || '#777' }}
+                        >
+                          {t.type.name}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
+                );
+              })}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

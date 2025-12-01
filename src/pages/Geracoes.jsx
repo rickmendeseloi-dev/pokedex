@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../componentes/NavBar/index.jsx';
 import './Geracoes.css';
 
-// Cores dos tipos (Padronizado)
 const TYPE_COLORS = {
   grass: '#78C850', grama: '#78C850',
   fire: '#F08030', fogo: '#F08030',
@@ -25,13 +25,12 @@ const TYPE_COLORS = {
   dark: '#705746',
 };
 
-function Geracoes() {
+export default function Geracoes() {
   const [pokemons, setPokemons] = useState([]);
   const [geracaoAtual, setGeracaoAtual] = useState(1);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Função para pegar ID da URL (caso precise)
   const pegarIdDaUrl = (url) => {
     if (!url) return null;
     const partes = url.split('/').filter(Boolean);
@@ -45,19 +44,16 @@ function Geracoes() {
         const response = await axios.get(`https://pokeapi.co/api/v2/generation/${geracaoAtual}`);
         const lista = response.data.pokemon_species;
         
-        // Busca detalhes para pegar imagem e tipos
         const pokemonPromises = lista.map((p) => {
           const id = pegarIdDaUrl(p.url);
-          // Filtro para evitar formas alternativas quebradas (opcional)
-          if(parseInt(id) > 10000) return null;
+          if(parseInt(id) > 10000) return null; 
 
           return axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
             .then((res) => res.data)
-            .catch(() => null); // Se der erro num pokemon específico, ignora
+            .catch(() => null);
         });
         
         const results = await Promise.all(pokemonPromises);
-        // Filtra nulos e ordena por ID
         const enrichedPokemons = results
             .filter(p => p !== null)
             .sort((a, b) => a.id - b.id);
@@ -74,80 +70,69 @@ function Geracoes() {
   }, [geracaoAtual]);
 
   const handlePokemonClick = (pokemon) => {
+    // Aqui em Gerações, 'pokemon' já é o objeto completo que veio do axios.get(pokemon/id)
+    // Então podemos passar ele direto, que vai funcionar igual a Home
     navigate(`/profile/${pokemon.id}`, { state: { pokemon } });
   };
 
   return (
-    <div className="geracoes-container">
-      {/* HEADER */}
-      <div className="header-geracoes">
-        <button onClick={() => navigate('/')} className="btn-voltar">
-          ← Voltar
-        </button>
-        <h1>Pokémons por Geração</h1>
-      </div>
-
-      {/* MENU DE GERAÇÕES */}
-      <div className="botoes-geracao">
-        {[1, 2, 3, 4].map((gen) => (
-          <button 
-            key={gen} 
-            onClick={() => setGeracaoAtual(gen)}
-            className={geracaoAtual === gen ? 'ativo' : ''}
-          >
-            {gen}ª Geração
-          </button>
-        ))}
-      </div>
-
-      {/* LISTAGEM GRID */}
-      {loading ? (
-        <p style={{textAlign: 'center', marginTop: 50}}>Carregando...</p>
-      ) : (
-        <div className="grid-cards">
-          {pokemons.map((pokemon) => {
-            // URL DA IMAGEM HD
-            const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
-            const types = pokemon.types || [];
-
-            return (
-              <div
-                key={pokemon.id}
-                className="card-clickable"
-                onClick={() => handlePokemonClick(pokemon)}
-              >
-                {/* Imagem */}
-                <img src={imgUrl} alt={pokemon.name} loading="lazy" />
-                
-                {/* Nome e ID */}
-                <h3>
-                    <span style={{ color: '#999', fontSize: '0.8em', marginRight: '6px' }}>
-                        #{String(pokemon.id).padStart(3, '0')}
-                    </span>
-                    {pokemon.name}
-                </h3>
-
-                {/* Tipos Coloridos */}
-                <div className="types-wrapper">
-                  {types.map((t) => (
-                    <span
-                      key={t.type.name}
-                      className="type-badge"
-                      style={{
-                        backgroundColor: TYPE_COLORS[t.type.name] || '#777'
-                      }}
-                    >
-                      {t.type.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+    <div>
+      <Navbar />
+      <div className="geracoes-container">
+        <div className="header-geracoes">
+          <h1>Pokémons por Geração</h1>
         </div>
-      )}
+
+        <div className="botoes-geracao">
+          {[1, 2, 3, 4].map((gen) => (
+            <button 
+              key={gen} 
+              onClick={() => setGeracaoAtual(gen)}
+              className={geracaoAtual === gen ? 'ativo' : ''}
+            >
+              {gen}ª Geração
+            </button>
+          ))}
+        </div>
+
+        {loading ? (
+          <p style={{textAlign: 'center', marginTop: 50}}>Carregando...</p>
+        ) : (
+          <div className="grid-cards">
+            {pokemons.map((pokemon) => {
+              const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
+              const types = pokemon.types || [];
+
+              return (
+                <div
+                  key={pokemon.id}
+                  className="card-clickable"
+                  onClick={() => handlePokemonClick(pokemon)}
+                >
+                  <img src={imgUrl} alt={pokemon.name} loading="lazy" />
+                  <h3>
+                      <span style={{ color: '#999', fontSize: '0.8em', marginRight: '6px' }}>
+                          #{String(pokemon.id).padStart(3, '0')}
+                      </span>
+                      {pokemon.name}
+                  </h3>
+                  <div className="types-wrapper">
+                    {types.map((t) => (
+                      <span
+                        key={t.type.name}
+                        className="type-badge"
+                        style={{ backgroundColor: TYPE_COLORS[t.type.name] || '#777' }}
+                      >
+                        {t.type.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-
-export default Geracoes;
