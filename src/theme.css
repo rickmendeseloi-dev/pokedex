@@ -1,0 +1,33 @@
+/* Variáveis de Tema Global */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f4f4;
+  --bg-tertiary: #f3f7fb;
+  --text-primary: #2b2b2b;
+  --text-secondary: #555555;
+  --text-tertiary: #999999;
+  --border-color: #e0e0e0;
+  --card-bg: #ffffff;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+}
+
+:root.dark-mode {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #242424;
+  --bg-tertiary: #2a2a3a;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  --border-color: #444444;
+  --card-bg: #2a2a2a;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+}
+
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}

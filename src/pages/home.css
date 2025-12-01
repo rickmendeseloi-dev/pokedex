@@ -1,6 +1,6 @@
 /* ==== CONTAINER PRINCIPAL ==== */
 .home-container {
-  background: #f4f4f4;
+  background: var(--bg-secondary);
   min-height: 100vh;
   padding-bottom: 40px;
   font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -17,7 +17,7 @@
   font-size: 42px;
   font-weight: 800;
   color: #d60000;
-  text-shadow: 2px 2px 0 #000;
+  text-shadow: 2px 2px 0 var(--text-primary);
   margin-bottom: 20px;
   letter-spacing: -0.5px;
 }
@@ -66,12 +66,12 @@
 
 /* ==== CARD ==== */
 .card-clickable {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 20px 10px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px var(--card-shadow);
   position: relative;
   overflow: hidden;
   
@@ -118,7 +118,7 @@
   font-family: 'Nunito', sans-serif;
   font-size: 15px;
   font-weight: 800;
-  color: #2b2b2b;
+  color: var(--text-primary);
   text-transform: capitalize;
   margin: 0 0 10px 0;
   text-align: center;

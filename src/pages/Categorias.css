@@ -3,12 +3,12 @@
   padding: 40px 20px;
   min-height: 100vh;
   /* Mantive o degradê que você mandou, pois é bonito */
-  background: linear-gradient(180deg, #f3f7fb 0%, #ffffff 40%);
+  background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-primary) 40%);
   font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   text-align: center;
 }
 
-/* ==== CABEÇALHO ==== */
+/* ==== CABEÇALHO ===io= */
 .header-categorias {
   position: relative;
   margin-bottom: 30px;
@@ -21,7 +21,7 @@
 .header-categorias h1 {
   font-size: 2.5rem;
   font-weight: 800;
-  color: #2b2b2b;
+  color: var(--text-primary);
   margin: 0;
   letter-spacing: -0.5px;
 }
@@ -66,11 +66,11 @@
 .cat-btn {
   padding: 12px 28px;
   border-radius: 12px;
-  border: 2px solid #e0e0e0;
-  background: #f5f5f5;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
   cursor: pointer;
   font-weight: 700;
-  color: #555;
+  color: var(--text-secondary);
   font-size: 14px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -92,7 +92,7 @@
 
 .titulo-secao {
   font-size: 1.8rem;
-  color: #444;
+  color: var(--text-secondary);
   margin-bottom: 30px;
   text-transform: capitalize;
 }
@@ -115,12 +115,12 @@
 
 /* Renomeei de .pokemon-card para .card-clickable */
 .card-clickable {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 20px 10px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px var(--card-shadow);
   position: relative;
   overflow: hidden;
   
@@ -165,7 +165,7 @@
   font-family: 'Nunito', sans-serif;
   font-size: 15px;
   font-weight: 800;
-  color: #2b2b2b;
+  color: var(--text-primary);
   text-transform: capitalize;
   margin: 0 0 10px 0;
   text-align: center;

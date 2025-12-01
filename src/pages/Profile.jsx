@@ -149,7 +149,7 @@ export default function Profile() {
             </div>
 
             <h3 className="section-title" style={{ color: themeColor }}>Sobre</h3>
-            <p style={{ textAlign: 'center', color: '#555', marginBottom: '20px' }}>{flavorText}</p>
+            <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '20px' }}>{flavorText}</p>
 
             <div className="info-grid">
               <div className="info-item"><h4>Altura</h4><p>{localPokemon.height / 10} m</p></div>

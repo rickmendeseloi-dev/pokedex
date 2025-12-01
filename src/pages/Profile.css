@@ -6,14 +6,14 @@
   justify-content: center;
   align-items: center;
   font-family: 'Nunito', sans-serif;
-  background-color: #f4f4f4;
+  background-color: var(--bg-secondary);
 }
 
 /* O Card Principal */
 .profile-card {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px var(--card-shadow);
   width: 100%;
   max-width: 800px;
   overflow: hidden;
@@ -83,7 +83,7 @@
 /* Corpo do Card */
 .profile-body {
   padding: 20px 40px 40px;
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 30px 30px 0 0; /* Arredonda o topo para encostar no header */
   margin-top: -40px; /* Puxa para cima */
   position: relative;
@@ -113,7 +113,7 @@
 .section-title {
   font-size: 1.2rem;
   font-weight: 800;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 15px;
   text-align: center;
   text-transform: uppercase;
@@ -129,7 +129,7 @@
 }
 
 .info-item h4 {
-  color: #888;
+  color: var(--text-tertiary);
   margin-bottom: 5px;
   font-size: 0.9rem;
 }
@@ -137,7 +137,7 @@
 .info-item p {
   font-weight: 700;
   font-size: 1.1rem;
-  color: #333;
+  color: var(--text-primary);
   text-transform: capitalize;
 }
 
@@ -158,7 +158,7 @@
 .stat-name {
   width: 100px;
   font-weight: 700;
-  color: #555;
+  color: var(--text-secondary);
   text-transform: uppercase;
   font-size: 0.75rem;
 }
@@ -168,13 +168,13 @@
   text-align: right;
   margin-right: 10px;
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .stat-bar-bg {
   flex: 1;
   height: 8px;
-  background-color: #eee;
+  background-color: var(--border-color);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -212,8 +212,12 @@
   object-fit: contain;
 }
 
+.evo-item span {
+  color: var(--text-secondary) !important;
+}
+
 .evo-arrow {
   font-size: 1.5rem;
-  color: #ccc;
+  color: var(--border-color);
   font-weight: bold;
 }

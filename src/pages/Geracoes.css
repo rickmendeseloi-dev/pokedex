@@ -2,7 +2,7 @@
 .geracoes-container {
   padding: 40px 20px;
   min-height: 100vh;
-  background: #f4f4f4; /* Fundo cinza padrão */
+  background: var(--bg-secondary); /* Fundo cinza padrão */
   font-family: 'Nunito', sans-serif;
   text-align: center;
 }
@@ -20,7 +20,7 @@
 .header-geracoes h1 {
   font-size: 2.5rem;
   font-weight: 800;
-  color: #2b2b2b;
+  color: var(--text-primary);
   margin: 0;
   letter-spacing: -0.5px;
 }
@@ -65,12 +65,12 @@
 .botoes-geracao button {
   padding: 12px 24px;
   cursor: pointer;
-  background-color: #fff;
-  border: 2px solid #e0e0e0;
+  background-color: var(--card-bg);
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   font-weight: 700;
   font-size: 14px;
-  color: #555;
+  color: var(--text-secondary);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
@@ -102,12 +102,12 @@
 }
 
 .card-clickable {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 20px 10px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px var(--card-shadow);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -152,7 +152,7 @@
   font-family: 'Nunito', sans-serif;
   font-size: 15px;
   font-weight: 800;
-  color: #2b2b2b;
+  color: var(--text-primary);
   text-transform: capitalize;
   margin: 0 0 10px 0;
   text-align: center;
