@@ -3,9 +3,31 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Categorias.css";
 
+// Cores dos tipos (Movi para fora para organizar)
+const TYPE_COLORS = {
+  grass: '#78C850', grama: '#78C850',
+  fire: '#F08030', fogo: '#F08030',
+  water: '#6890F0', agua: '#6890F0', água: '#6890F0',
+  bug: '#A8B820', inseto: '#A8B820',
+  normal: '#A8A878',
+  poison: '#A040A0', veneno: '#A040A0',
+  electric: '#F8D030', eletrico: '#F8D030', elétrico: '#F8D030',
+  ground: '#E0C068', terra: '#E0C068',
+  fairy: '#EE99AC', fada: '#EE99AC',
+  fighting: '#C03028', lutador: '#C03028',
+  psychic: '#F85888', psiquico: '#F85888', psíquico: '#F85888',
+  rock: '#B8A038', pedra: '#B8A038',
+  ghost: '#705898', fantasma: '#705898',
+  ice: '#98D8D8', gelo: '#98D8D8',
+  dragon: '#7038F8', dragao: '#7038F8', dragão: '#7038F8',
+  steel: '#B8B8D0', aco: '#B8B8D0', aço: '#B8B8D0',
+  flying: '#A890F0', voador: '#A890F0',
+  dark: '#705746',
+};
+
 export default function Categorias() {
   const navigate = useNavigate();
-  // LISTA EM PORTUGUÊS → API EM INGLÊS
+  
   const categorias = [
     { nome: "Grama", tipo: "grass" },
     { nome: "Fogo", tipo: "fire" },
@@ -29,62 +51,35 @@ export default function Categorias() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
   const [pokemons, setPokemons] = useState([]);
 
-  // Cores dos tipos (igual Home)
-  const TYPE_COLORS = {
-    grass: '#7AC74C',
-    fire: '#EE8130',
-    water: '#6390F0',
-    bug: '#A6B91A',
-    normal: '#A8A77A',
-    poison: '#A33EA1',
-    electric: '#F7D02C',
-    ground: '#E2BF65',
-    fairy: '#D685AD',
-    fighting: '#C22E28',
-    psychic: '#F95587',
-    rock: '#B6A136',
-    ghost: '#735797',
-    ice: '#96D9D6',
-    dragon: '#6F35FC',
-    dark: '#705746',
-    steel: '#B7B7CE',
-    flying: '#A98FF3',
-  };
-
-  function capitalize(s) {
-    if (!s) return '';
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }
-
-  // Função para navegar para o Profile do Pokémon
+  // Função para navegar para o Profile
   const handlePokemonClick = async (pokemonId) => {
     try {
       const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
       const pokemonData = response.data;
       navigate(`/profile/${pokemonData.id}`, { state: { pokemon: pokemonData } });
     } catch (error) {
-      console.error("Erro ao buscar detalhes do pokémon:", error);
+      console.error("Erro ao buscar detalhes:", error);
       navigate(`/profile/${pokemonId}`);
     }
   };
 
-  // PEGAR O ID DO POKEMON DA URL
   function getPokemonId(url) {
     const partes = url.split("/");
     return partes[partes.length - 2];
   }
 
-  // BUSCAR POKÉMONS DA CATEGORIA
   useEffect(() => {
     if (!categoriaSelecionada) return;
 
     fetch(`https://pokeapi.co/api/v2/type/${categoriaSelecionada}`)
       .then((res) => res.json())
       .then((data) => {
-        // A API de types retorna um array com objetos "pokemon" dentro
-        // Fetch details para cada pokemon para obter seus tipos
+        // Pega todos os pokemons daquela categoria
         const pokemonPromises = data.pokemon.map((p) => {
           const id = getPokemonId(p.pokemon.url);
+          // Limitando a ID < 10000 para evitar formas "mega" ou quebradas da API que não têm imagem oficial
+          if(parseInt(id) > 10000) return null; 
+
           return fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
             .then((res) => res.json())
             .then((details) => ({
@@ -93,34 +88,21 @@ export default function Categorias() {
             }));
         });
         
-        Promise.all(pokemonPromises).then((enrichedPokemons) => {
-          setPokemons(enrichedPokemons);
+        Promise.all(pokemonPromises).then((results) => {
+            // Remove os nulos (que eram IDs muito altos)
+            const enrichedPokemons = results.filter(p => p !== null);
+            setPokemons(enrichedPokemons);
         });
       });
   }, [categoriaSelecionada]);
 
   return (
     <div className="categorias-container">
-      <div style={{ position: 'relative', marginBottom: 30 }}>
-        <h1>Categorias de Pokémons</h1>
-        <button 
-          onClick={() => navigate('/')}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            padding: '10px 20px',
-            background: '#ff6b6b',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 8,
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            fontSize: 14
-          }}
-        >
-          ← Voltar para Home
+      <div className="header-categorias">
+        <button onClick={() => navigate('/')} className="btn-voltar">
+          ← Voltar
         </button>
+        <h1>Categorias</h1>
       </div>
 
       {/* MENU DAS CATEGORIAS */}
@@ -129,7 +111,13 @@ export default function Categorias() {
           <button
             key={cat.tipo}
             onClick={() => setCategoriaSelecionada(cat.tipo)}
-            className={categoriaSelecionada === cat.tipo ? 'ativo' : ''}
+            className={categoriaSelecionada === cat.tipo ? 'cat-btn ativo' : 'cat-btn'}
+            style={{ 
+                 // Se estiver ativo, usa a cor do tipo. Se não, fica cinza.
+                 backgroundColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#f5f5f5',
+                 color: categoriaSelecionada === cat.tipo ? '#fff' : '#555',
+                 borderColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#e0e0e0',
+            }}
           >
             {cat.nome}
           </button>
@@ -139,43 +127,47 @@ export default function Categorias() {
       {/* LISTA DE POKÉMONS */}
       {categoriaSelecionada && (
         <>
-          <h2>
-            Tipo: {categorias.find(c => c.tipo === categoriaSelecionada)?.nome}
+          <h2 className="titulo-secao">
+            Tipo: <span style={{color: TYPE_COLORS[categoriaSelecionada], fontWeight: '800'}}>
+                {categorias.find(c => c.tipo === categoriaSelecionada)?.nome}
+            </span>
           </h2>
 
-          <div className="pokemon-grid">
+          <div className="grid-cards">
             {pokemons.map((p) => {
-              // Na API de Type, o objeto vem aninhado em p.pokemon
               const nome = p.pokemon.name;
               const url = p.pokemon.url;
               const id = getPokemonId(url);
               const types = p.pokemon.types || [];
+              
+              // URL da Imagem HD (Official Artwork)
+              const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
               return (
                 <div
                   key={id}
-                  className="pokemon-card"
+                  className="card-clickable"
                   onClick={() => handlePokemonClick(id)}
                 >
-                  <img
-                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
-                    alt={nome}
-                  />
-                  <p>{nome}</p>
-                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {types && types.map((t) => (
+                  <img src={imgUrl} alt={nome} loading="lazy" />
+                  
+                  {/* Número e Nome */}
+                  <h3>
+                    <span style={{ color: '#999', fontSize: '0.8em', marginRight: '6px' }}>
+                        #{String(id).padStart(3, '0')}
+                    </span>
+                    {nome}
+                  </h3>
+
+                  {/* Pílulas de Tipo */}
+                  <div className="types-wrapper">
+                    {types.map((t) => (
                       <span
                         key={t.type.name}
-                        style={{
-                          backgroundColor: TYPE_COLORS[t.type.name] || '#777',
-                          color: '#fff',
-                          padding: '4px 10px',
-                          borderRadius: 12,
-                          fontSize: 12,
-                          fontWeight: 600,
-                        }}
+                        className="type-badge"
+                        style={{ backgroundColor: TYPE_COLORS[t.type.name] || '#777' }}
                       >
-                        {capitalize(t.type.name)}
+                        {t.type.name}
                       </span>
                     ))}
                   </div>

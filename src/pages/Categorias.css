@@ -1,126 +1,195 @@
+/* ==== CONTAINER PRINCIPAL ==== */
 .categorias-container {
-    padding: 40px 20px;
-    text-align: center;
-    min-height: 100vh;
-    background: linear-gradient(180deg, #f3f7fb 0%, #ffffff 40%);
-    font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto;
+  padding: 40px 20px;
+  min-height: 100vh;
+  /* Mantive o degradê que você mandou, pois é bonito */
+  background: linear-gradient(180deg, #f3f7fb 0%, #ffffff 40%);
+  font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  text-align: center;
 }
 
-/* TÍTULOS */
-.categorias-container h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: #2b2b2b;
-    margin-bottom: 30px;
-    letter-spacing: -0.5px;
+/* ==== CABEÇALHO ==== */
+.header-categorias {
+  position: relative;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
 }
 
-.categorias-container h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #555;
-    margin-bottom: 20px;
+.header-categorias h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #2b2b2b;
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
-/* MENU */
+/* ==== BOTÃO VOLTAR ==== */
+.btn-voltar {
+  position: absolute;
+  left: 20px;
+  padding: 10px 20px;
+  background: #ffcb05; /* Amarelo padrão */
+  color: #000;
+  border: 3px solid #000;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 14px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 0 #000;
+  z-index: 10;
+}
+
+.btn-voltar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #000;
+}
+
+.btn-voltar:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 0 #000;
+}
+
+/* ==== MENU DE CATEGORIAS (Botões de filtro) ==== */
 .categorias-menu {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding: 0 20px;
 }
 
-.categorias-menu button {
-    padding: 12px 28px;
-    border-radius: 12px;
-    border: 2px solid #e0e0e0;
-    background: #f5f5f5;
-    cursor: pointer;
-    font-weight: 700;
-    color: #555;
-    font-size: 14px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+.cat-btn {
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-weight: 700;
+  color: #555;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.categorias-menu button:hover {
-    border-color: #ffcb05;
-    background-color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 203, 5, 0.2);
+.cat-btn:hover {
+  background-color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
 }
 
-.categorias-menu button.ativo {
-    background: linear-gradient(135deg, #ffcb05, #ffd700);
-    color: #000;
-    border-color: #ffa500;
-    font-weight: 800;
-    box-shadow: 0 8px 20px rgba(255, 203, 5, 0.3);
+/* Estilo quando ativo é controlado pelo React (inline style), 
+   mas aqui garantimos a transição suave */
+.cat-btn.ativo {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transform: scale(1.05);
+  border-width: 2px;
 }
 
-/* GRID */
-.pokemon-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 32px;
-    justify-items: center;
-    align-items: start;
-    padding: 0 40px;
-    margin-bottom: 40px;
-    width: 100%;
+.titulo-secao {
+  font-size: 1.8rem;
+  color: #444;
+  margin-bottom: 30px;
+  text-transform: capitalize;
 }
 
-/* CARD */
-.pokemon-card {
-    padding: 20px 12px;
-    border: none;
-    border-radius: 16px;
-    text-align: center;
-    cursor: pointer;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    max-width: 220px;
+/* ================================================= */
+/* ==== GRID E CARDS (Padrão Unificado) ==== */
+/* ================================================= */
+
+/* Renomeei de .pokemon-grid para .grid-cards para bater com o JSX */
+.grid-cards {
+  display: grid;
+  /* Mudei de 200px para 160px para ficar igual Home/Gerações */
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  padding: 0 40px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.pokemon-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255,203,5,0.1), rgba(255,203,5,0));
-    opacity: 0;
-    transition: opacity 0.3s;
+/* Renomeei de .pokemon-card para .card-clickable */
+.card-clickable {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+  
+  /* Flex para alinhar tudo ao centro */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.pokemon-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+.card-clickable::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,203,5,0.1), rgba(255,203,5,0));
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-.pokemon-card:hover::before {
-    opacity: 1;
+.card-clickable:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.15);
 }
 
-.pokemon-card img {
-    width: 110px;
-    height: 110px;
-    object-fit: contain;
-    margin-bottom: 12px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+.card-clickable:hover::before {
+  opacity: 1;
 }
 
-.pokemon-card p {
-    margin-top: 10px;
-    text-transform: capitalize;
-    font-weight: 700;
-    color: #2b2b2b;
-    margin-bottom: 10px;
-    font-size: 15px;
+/* IMAGEM HD */
+.card-clickable img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* NOME E NÚMERO */
+.card-clickable h3 {
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #2b2b2b;
+  text-transform: capitalize;
+  margin: 0 0 10px 0;
+  text-align: center;
+  width: 100%;
+}
+
+/* ==== AS PÍLULAS COLORIDAS (Isso faltava no seu CSS) ==== */
+
+.types-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.type-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff; /* Texto branco */
+  text-transform: capitalize;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }

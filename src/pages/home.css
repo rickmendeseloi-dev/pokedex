@@ -1,9 +1,9 @@
 /* ==== CONTAINER PRINCIPAL ==== */
 .home-container {
-  background: #f4f4f4; /* branco gelo */
+  background: #f4f4f4;
   min-height: 100vh;
   padding-bottom: 40px;
-  font-family: Arial, sans-serif;
+  font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* ==== CONTEÚDO ==== */
@@ -15,25 +15,27 @@
 /* ==== TÍTULO POKÉDEX ==== */
 .home-content h1 {
   font-size: 42px;
-  font-weight: bold;
-  color: #d60000; /* vermelho Pokémon */
+  font-weight: 800;
+  color: #d60000;
   text-shadow: 2px 2px 0 #000;
   margin-bottom: 20px;
+  letter-spacing: -0.5px;
 }
 
-/* ==== BOTÃO "VER POR CATEGORIAS" ==== */
+/* ==== BOTÕES DE NAVEGAÇÃO ==== */
 .btn {
   display: inline-block;
   padding: 12px 20px;
   font-size: 18px;
   font-weight: bold;
-  background: #ffcb05; /* amarelo Pokémon */
+  background: #ffcb05;
   color: #000;
   text-decoration: none;
   border: 3px solid #000;
   border-radius: 10px;
   box-shadow: 0 4px 0 #000;
   transition: 0.2s ease-in-out;
+  margin: 0 10px;
 }
 
 .btn:hover {
@@ -46,36 +48,102 @@
   box-shadow: 0 3px 0 #000;
 }
 
-/* ==== GRID DOS CARDS ==== */
+/* ================================================= */
+/* ==== ESTILOS DOS CARDS (IGUAL GERAÇÕES) ==== */
+/* ================================================= */
+
+/* ==== GRID ==== */
 .grid-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 24px;
-  justify-items: center;
-  align-items: start;
-  margin-top: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  padding: 0 40px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  /* IMPORTANTE: Impede que os cards estiquem verticalmente */
+  align-items: start; 
 }
 
-/* ==== CARD CLICÁVEL ==== */
+/* ==== CARD ==== */
 .card-clickable {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 10px;
   cursor: pointer;
-  border-radius: 12px;
-  transition: 0.2s;
-  width: 100%;
-  max-width: 220px;
-  height: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+  
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
-/* animação Pokémon */
+/* Efeito de brilho ao passar o mouse */
+.card-clickable::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,203,5,0.1), rgba(255,203,5,0));
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
 .card-clickable:hover {
-  transform: scale(1.05);
-  filter: brightness(1.1);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.15);
 }
 
-/* ao clicar */
-.card-clickable:active {
-  transform: scale(0.97);
+.card-clickable:hover::before {
+  opacity: 1;
+}
+
+/* ==== IMAGEM ==== */
+.card-clickable img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* ==== NOME E NÚMERO (#001 Bulbasaur) ==== */
+.card-clickable h3 {
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #2b2b2b;
+  text-transform: capitalize;
+  margin: 0 0 10px 0;
+  text-align: center;
+  width: 100%;
+}
+
+/* ==== CONTAINER DAS PÍLULAS (TIPOS) ==== */
+.types-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* ==== PÍLULAS DE TIPO (Grass, Poison, etc) ==== */
+.type-badge {
+  padding: 4px 14px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff; /* Texto branco */
+  text-transform: capitalize;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
