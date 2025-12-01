@@ -3,10 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./home.css";
 import Navbar from "../componentes/NavBar/index.jsx";
-// Importe a logo que você escolheu
 import logo from '../assets/logo3pk.png'; 
 
-// Objeto de cores para os tipos
 const typeColors = {
   grass: '#78C850', grama: '#78C850',
   fire: '#F08030', fogo: '#F08030',
@@ -32,8 +30,6 @@ export default function Home({ setPokemonData }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [generationLimit, setGenerationLimit] = useState(4);
-  
-  // 1. NOVO ESTADO PARA A PESQUISA
   const [searchText, setSearchText] = useState(""); 
   
   const navigate = useNavigate();
@@ -77,19 +73,17 @@ export default function Home({ setPokemonData }) {
 
   // 2. LÓGICA DE FILTRO (Nome ou ID)
   const filteredPokemons = pokemons.filter((p) => {
-    if (!searchText) return true; // Se não tem texto, mostra tudo
+  const filteredPokemons = pokemons.filter((p) => {
+    if (!searchText) return true;
     const lowerText = searchText.toLowerCase();
     return (
-      p.name.toLowerCase().includes(lowerText) || // Procura pelo nome
-      String(p.id).includes(lowerText)            // Procura pelo número (ID)
+      p.name.toLowerCase().includes(lowerText) ||
+      String(p.id).includes(lowerText)
     );
-  });
-
   return (
     <div>
-      {/* 3. PASSANDO A FUNÇÃO PARA O NAVBAR */}
+    <div>
       <Navbar pokemonFilter={setSearchText} />
-      
       <div className="home-container">
         <main className="home-content">
           
@@ -114,13 +108,11 @@ export default function Home({ setPokemonData }) {
             <>
               <p style={{ marginBottom: 8, fontWeight: 700 }}>
                 {/* Mostra contagem dos filtrados */}
+              <p style={{ marginBottom: 8, fontWeight: 700 }}>
                 Mostrando {filteredPokemons.length} pokémons
               </p>
               
-              {/* 4. IMPORTANTE: USAR filteredPokemons NO MAP */}
-              <div className="grid-cards">
-                {filteredPokemons.map((p) => {
-                  const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`;
+              <div className="grid-cards">raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`;
                   
                   return (
                     <div key={p.id} className="card-clickable" onClick={() => pokemonPickHandler(p)}>
@@ -152,9 +144,8 @@ export default function Home({ setPokemonData }) {
                 })}
                 {/* Mensagem caso a busca não encontre nada */}
                 {filteredPokemons.length === 0 && (
-                   <div style={{gridColumn: '1 / -1', textAlign: 'center', marginTop: 20}}>
-                     <h3>Nenhum Pokémon encontrado para "{searchText}"</h3>
-                   </div>
+                })}
+                {filteredPokemons.length === 0 && (
                 )}
               </div>
             </>

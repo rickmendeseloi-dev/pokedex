@@ -4,7 +4,6 @@ const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
     const [isDark, setIsDark] = useState(() => {
-    // Recupera o tema salvo no localStorage ou usa preferência do sistema
     const saved = localStorage.getItem('theme-mode');
     if (saved) {
         return saved === 'dark';
@@ -13,10 +12,8 @@ export function ThemeProvider({ children }) {
     });
 
     useEffect(() => {
-    // Salva a preferência no localStorage
     localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
     
-    // Aplica a classe no elemento raiz
     if (isDark) {
         document.documentElement.classList.add('dark-mode');
     } else {

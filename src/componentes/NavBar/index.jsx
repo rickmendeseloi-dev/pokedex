@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext.jsx';
-// Importando a imagem corretamente
 import logo from '../../assets/logo2pk.png'; 
 
 export default function Navbar({ pokemonFilter = () => {}, hideSearch = false }) {
@@ -16,7 +15,6 @@ export default function Navbar({ pokemonFilter = () => {}, hideSearch = false })
           <img 
             src={logo} 
             alt="logo" 
-            // AUMENTEI AQUI DE 36 PARA 55
             style={{ height: 55, cursor: 'pointer', objectFit: 'contain' }} 
             onClick={() => navigate('/')} 
           />

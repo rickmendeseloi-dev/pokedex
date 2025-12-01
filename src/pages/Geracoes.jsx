@@ -70,8 +70,6 @@ export default function Geracoes() {
   }, [geracaoAtual]);
 
   const handlePokemonClick = (pokemon) => {
-    // Aqui em Gerações, 'pokemon' já é o objeto completo que veio do axios.get(pokemon/id)
-    // Então podemos passar ele direto, que vai funcionar igual a Home
     navigate(`/profile/${pokemon.id}`, { state: { pokemon } });
   };
 

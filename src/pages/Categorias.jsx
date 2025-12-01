@@ -55,9 +55,6 @@ export default function Categorias() {
     return partes[partes.length - 2];
   }
 
-  // === CORREÇÃO DA TELA BRANCA ===
-  // Não enviamos mais o objeto incompleto no 'state'.
-  // Apenas navegamos para a URL certa. O Profile vai baixar os dados completos sozinho.
   const handlePokemonClick = (id) => {
     navigate(`/profile/${id}`);
   };
@@ -129,14 +126,12 @@ export default function Categorias() {
                 const url = p.pokemon.url;
                 const id = getPokemonId(url);
                 const types = p.pokemon.types || [];
-                // Imagem HD
                 const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
                 return (
                   <div
                     key={id}
                     className="card-clickable"
-                    // Passamos APENAS o ID. Isso evita o erro no Profile.
                     onClick={() => handlePokemonClick(id)}
                   >
                     <img src={imgUrl} alt={nome} loading="lazy" />

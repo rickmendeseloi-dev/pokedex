@@ -35,16 +35,14 @@ const statNames = {
 export default function Profile() {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams(); // O ID que vem da URL (ex: 1, 25, 6)
+  const params = useParams();
 
   const [localPokemon, setLocalPokemon] = useState(null);
   const [flavorText, setFlavorText] = useState("");
   const [evolutionDetails, setEvolutionDetails] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 1. CARREGAR DADOS DO POKÉMON (Prioridade total para a URL)
   useEffect(() => {
-    // Função para buscar na API
     const fetchFromApi = async (id) => {
       setLoading(true);
       try {
@@ -61,25 +59,21 @@ export default function Profile() {
 
     const idUrl = params.id;
     const estadoNavegacao = location.state?.pokemon;
+    const idUrl = params.id;
+    const estadoNavegacao = location.state?.pokemon;
 
-    // LÓGICA DE DECISÃO:
-    // 1. Se temos dados no 'state' (clique vindo da Home/Categoria) E o ID bate com a URL, usa ele (é mais rápido).
     if (estadoNavegacao && String(estadoNavegacao.id) === String(idUrl)) {
       setLocalPokemon(estadoNavegacao);
       setLoading(false);
     } 
-    // 2. Se não tem state ou o ID é diferente, BUSCA NA API PELO ID DA URL.
     else if (idUrl) {
       fetchFromApi(idUrl);
     }
     
-  }, [params.id, location.state]); // Roda sempre que o ID da URL mudar
-
-  // 2. BUSCAR DETALHES (Descrição e Evoluções)
+  }, [params.id, location.state]);
   useEffect(() => {
     if (!localPokemon) return;
-
-    const fetchDetails = async () => {
+  useEffect(() => {ils = async () => {
       try {
         const speciesRes = await fetch(localPokemon.species.url);
         const speciesData = await speciesRes.json();
@@ -110,18 +104,17 @@ export default function Profile() {
     };
 
     fetchDetails();
-  }, [localPokemon?.id]); // Só roda se o ID do pokemon carregado mudar
+      }
+    };
+
+    fetchDetails();
+  }, [localPokemon?.id]);
 
   const handleEvoClick = (id) => {
     navigate(`/profile/${id}`);
   };
 
-  // Renderização
   if (loading) return <div className="profile-container"><h3>Carregando...</h3></div>;
-  if (!localPokemon) return <div className="profile-container"><h3>Pokémon não encontrado.</h3></div>;
-
-  const mainType = localPokemon.types[0].type.name;
-  const themeColor = typeColors[mainType] || '#777';
   const imgHd = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${localPokemon.id}.png`;
 
   return (
