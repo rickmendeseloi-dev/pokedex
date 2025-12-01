@@ -147,3 +147,12 @@
   white-space: nowrap;
   text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
+/* No final do arquivo home.css */
+
+.pokemon-logo {
+  width: 280px;  /* Tamanho ideal */
+  max-width: 80%; /* Para não estourar em celular */
+  display: block;
+  margin: 0 auto 10px auto; /* Centraliza e dá espaço embaixo */
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); /* Sombra bonita igual do print */
+}

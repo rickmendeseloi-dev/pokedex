@@ -3,7 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./home.css";
 import Navbar from "../componentes/NavBar/index.jsx";
-// Removi o import do PokemonCard pois vamos fazer o card direto aqui para ficar igual ao gerações
+// IMPORTANTE: Importe a sua imagem aqui
+import logo from '../assets/logo3pk.png';
 
 // Objeto de cores para os tipos
 const typeColors = {
@@ -78,7 +79,16 @@ export default function Home({ setPokemonData }) {
       <Navbar />
       <div className="home-container">
         <main className="home-content">
+          
+          {/* LOGO LOCAL ADICIONADO AQUI */}
+          <img 
+            src={logo} // Usa a variável importada
+            alt="Pokémon Logo" 
+            className="pokemon-logo" 
+          />
+
           <h1>Pokédex</h1>
+
           <div style={{ marginBottom: 12, display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center' }}>
             <Link to="/categorias" className="btn">Ver por Categorias</Link>
             <Link to="/geracoes" className="btn">Ver por Gerações</Link>
@@ -97,7 +107,6 @@ export default function Home({ setPokemonData }) {
               {/* GRID DE CARDS */}
               <div className="grid-cards">
                 {pokemons.map((p) => {
-                  // URL da Imagem Oficial (HD)
                   const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`;
                   
                   return (
