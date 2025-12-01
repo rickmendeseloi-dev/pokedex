@@ -3,8 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./home.css";
 import Navbar from "../componentes/NavBar/index.jsx";
-// IMPORTANTE: Importe a sua imagem aqui
-import logo from '../assets/logo3pk.png';
+// Importe a logo que você escolheu
+import logo from '../assets/logo3pk.png'; 
 
 // Objeto de cores para os tipos
 const typeColors = {
@@ -31,15 +31,17 @@ export default function Home({ setPokemonData }) {
   const [pokemons, setPokemons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [loadedCount, setLoadedCount] = useState(0);
   const [generationLimit, setGenerationLimit] = useState(4);
+  
+  // 1. NOVO ESTADO PARA A PESQUISA
+  const [searchText, setSearchText] = useState(""); 
+  
   const navigate = useNavigate();
 
   useEffect(() => {
     const getPokemonsByGenerations = async () => {
       setLoading(true);
       setError(null);
-      setLoadedCount(0);
       try {
         const genEndpoints = [];
         for (let g = 1; g <= generationLimit; g++) genEndpoints.push(`https://pokeapi.co/api/v2/generation/${g}/`);
@@ -56,7 +58,6 @@ export default function Home({ setPokemonData }) {
         const promises = speciesNames.map((name) => axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`));
         const settled = await Promise.allSettled(promises);
         const successes = settled.filter(r => r.status === 'fulfilled').map(r => r.value.data);
-        setLoadedCount(successes.length);
         const list = successes.sort((a, b) => a.id - b.id);
         setPokemons(list);
       } catch (err) {
@@ -74,15 +75,26 @@ export default function Home({ setPokemonData }) {
     navigate(`/profile/${pokemon.id}`, { state: { pokemon } });
   };
 
+  // 2. LÓGICA DE FILTRO (Nome ou ID)
+  const filteredPokemons = pokemons.filter((p) => {
+    if (!searchText) return true; // Se não tem texto, mostra tudo
+    const lowerText = searchText.toLowerCase();
+    return (
+      p.name.toLowerCase().includes(lowerText) || // Procura pelo nome
+      String(p.id).includes(lowerText)            // Procura pelo número (ID)
+    );
+  });
+
   return (
     <div>
-      <Navbar />
+      {/* 3. PASSANDO A FUNÇÃO PARA O NAVBAR */}
+      <Navbar pokemonFilter={setSearchText} />
+      
       <div className="home-container">
         <main className="home-content">
           
-          {/* LOGO LOCAL ADICIONADO AQUI */}
           <img 
-            src={logo} // Usa a variável importada
+            src={logo} 
             alt="Pokémon Logo" 
             className="pokemon-logo" 
           />
@@ -98,23 +110,22 @@ export default function Home({ setPokemonData }) {
             <p>Carregando pokémons...</p>
           ) : error ? (
             <p style={{ color: 'red' }}>{error}</p>
-          ) : pokemons.length === 0 ? (
-            <p>Nenhum pokémon disponível.</p>
           ) : (
             <>
-              <p style={{ marginBottom: 8, fontWeight: 700 }}>Mostrando {loadedCount} pokémons (até geração {generationLimit})</p>
+              <p style={{ marginBottom: 8, fontWeight: 700 }}>
+                {/* Mostra contagem dos filtrados */}
+                Mostrando {filteredPokemons.length} pokémons
+              </p>
               
-              {/* GRID DE CARDS */}
+              {/* 4. IMPORTANTE: USAR filteredPokemons NO MAP */}
               <div className="grid-cards">
-                {pokemons.map((p) => {
+                {filteredPokemons.map((p) => {
                   const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`;
                   
                   return (
                     <div key={p.id} className="card-clickable" onClick={() => pokemonPickHandler(p)}>
-                      {/* Imagem */}
                       <img src={imgUrl} alt={p.name} loading="lazy" />
                       
-                      {/* Nome e ID */}
                       <h3>
                         <span style={{ color: '#999', fontSize: '0.8em', marginRight: '6px' }}>
                           #{String(p.id).padStart(3, '0')}
@@ -122,7 +133,6 @@ export default function Home({ setPokemonData }) {
                         {p.name}
                       </h3>
 
-                      {/* Tipos (Pílulas) */}
                       <div className="types-wrapper">
                         {p.types.map((slot) => {
                           const typeName = slot.type ? slot.type.name : 'normal';
@@ -140,6 +150,12 @@ export default function Home({ setPokemonData }) {
                     </div>
                   );
                 })}
+                {/* Mensagem caso a busca não encontre nada */}
+                {filteredPokemons.length === 0 && (
+                   <div style={{gridColumn: '1 / -1', textAlign: 'center', marginTop: 20}}>
+                     <h3>Nenhum Pokémon encontrado para "{searchText}"</h3>
+                   </div>
+                )}
               </div>
             </>
           )}
