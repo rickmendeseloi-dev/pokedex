@@ -102,9 +102,9 @@ export default function Categorias() {
               onClick={() => setCategoriaSelecionada(cat.tipo)}
               className={categoriaSelecionada === cat.tipo ? 'cat-btn ativo' : 'cat-btn'}
               style={{ 
-                 borderColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#e0e0e0',
-                 color: categoriaSelecionada === cat.tipo ? '#fff' : '#555',
-                 backgroundColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#f5f5f5'
+                borderColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#e0e0e0',
+                color: categoriaSelecionada === cat.tipo ? '#fff' : '#555',
+                backgroundColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#f5f5f5'
               }}
             >
               {cat.nome}

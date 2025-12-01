@@ -1,14 +1,11 @@
-/* ==== CONTAINER PRINCIPAL ==== */
 .categorias-container {
   padding: 40px 20px;
   min-height: 100vh;
-  /* Mantive o degradê que você mandou, pois é bonito */
   background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-primary) 40%);
   font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   text-align: center;
 }
 
-/* ==== CABEÇALHO ===io= */
 .header-categorias {
   position: relative;
   margin-bottom: 30px;
@@ -26,12 +23,11 @@
   letter-spacing: -0.5px;
 }
 
-/* ==== BOTÃO VOLTAR ==== */
 .btn-voltar {
   position: absolute;
   left: 20px;
   padding: 10px 20px;
-  background: #ffcb05; /* Amarelo padrão */
+  background: #ffcb05;
   color: #000;
   border: 3px solid #000;
   border-radius: 8px;
@@ -53,7 +49,6 @@
   box-shadow: 0 2px 0 #000;
 }
 
-/* ==== MENU DE CATEGORIAS (Botões de filtro) ==== */
 .categorias-menu {
   display: flex;
   flex-wrap: wrap;
@@ -82,8 +77,6 @@
   box-shadow: 0 6px 16px rgba(0,0,0,0.1);
 }
 
-/* Estilo quando ativo é controlado pelo React (inline style), 
-   mas aqui garantimos a transição suave */
 .cat-btn.ativo {
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   transform: scale(1.05);
@@ -97,14 +90,8 @@
   text-transform: capitalize;
 }
 
-/* ================================================= */
-/* ==== GRID E CARDS (Padrão Unificado) ==== */
-/* ================================================= */
-
-/* Renomeei de .pokemon-grid para .grid-cards para bater com o JSX */
 .grid-cards {
   display: grid;
-  /* Mudei de 200px para 160px para ficar igual Home/Gerações */
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 20px;
   padding: 0 40px;
@@ -113,7 +100,6 @@
   box-sizing: border-box;
 }
 
-/* Renomeei de .pokemon-card para .card-clickable */
 .card-clickable {
   background: var(--card-bg);
   border-radius: 16px;
@@ -123,8 +109,6 @@
   box-shadow: 0 4px 12px var(--card-shadow);
   position: relative;
   overflow: hidden;
-  
-  /* Flex para alinhar tudo ao centro */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -151,7 +135,6 @@
   opacity: 1;
 }
 
-/* IMAGEM HD */
 .card-clickable img {
   width: 110px;
   height: 110px;
@@ -160,7 +143,6 @@
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-/* NOME E NÚMERO */
 .card-clickable h3 {
   font-family: 'Nunito', sans-serif;
   font-size: 15px;
@@ -171,8 +153,6 @@
   text-align: center;
   width: 100%;
 }
-
-/* ==== AS PÍLULAS COLORIDAS (Isso faltava no seu CSS) ==== */
 
 .types-wrapper {
   display: flex;
@@ -187,7 +167,7 @@
   border-radius: 12px;
   font-size: 11px;
   font-weight: 700;
-  color: #fff; /* Texto branco */
+  color: #fff;
   text-transform: capitalize;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   white-space: nowrap;

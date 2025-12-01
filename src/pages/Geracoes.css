@@ -1,13 +1,11 @@
-/* ==== CONTAINER GERAL ==== */
 .geracoes-container {
   padding: 40px 20px;
   min-height: 100vh;
-  background: var(--bg-secondary); /* Fundo cinza padrão */
+  background: var(--bg-secondary);
   font-family: 'Nunito', sans-serif;
   text-align: center;
 }
 
-/* ==== CABEÇALHO ==== */
 .header-geracoes {
   position: relative;
   margin-bottom: 30px;
@@ -25,7 +23,6 @@
   letter-spacing: -0.5px;
 }
 
-/* ==== BOTÃO VOLTAR (AMARELO) ==== */
 .btn-voltar {
   position: absolute;
   left: 20px;
@@ -52,7 +49,6 @@
   box-shadow: 0 2px 0 #000;
 }
 
-/* ==== MENU DE GERAÇÕES ==== */
 .botoes-geracao {
   margin-bottom: 40px;
   display: flex;
@@ -82,16 +78,12 @@
 }
 
 .botoes-geracao button.ativo {
-  background: #ffcb05; /* Amarelo Ativo */
+  background: #ffcb05;
   color: #000;
   border-color: #e0b000;
   box-shadow: 0 4px 12px rgba(255, 203, 5, 0.4);
   transform: scale(1.05);
 }
-
-/* ================================================= */
-/* ==== ESTILOS DOS CARDS (UNIFICADO) ==== */
-/* ================================================= */
 
 .grid-cards {
   display: grid;
@@ -120,7 +112,6 @@
   box-shadow: 0 16px 32px rgba(0,0,0,0.15);
 }
 
-/* Efeito de brilho */
 .card-clickable::before {
   content: '';
   position: absolute;
@@ -138,7 +129,6 @@
   opacity: 1;
 }
 
-/* Imagem HD */
 .card-clickable img {
   width: 110px;
   height: 110px;
@@ -147,7 +137,6 @@
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-/* Nome e ID */
 .card-clickable h3 {
   font-family: 'Nunito', sans-serif;
   font-size: 15px;
@@ -159,7 +148,6 @@
   width: 100%;
 }
 
-/* Pílulas */
 .types-wrapper {
   display: flex;
   justify-content: center;
