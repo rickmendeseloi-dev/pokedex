@@ -36,14 +36,13 @@ const statNames = {
 export default function Profile() {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams(); // ID da URL
-
+  const params = useParams(); 
   const [localPokemon, setLocalPokemon] = useState(null);
   const [flavorText, setFlavorText] = useState("");
   const [evolutionDetails, setEvolutionDetails] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 1. CARREGAR DADOS (Prioridade: URL > State)
+  
   useEffect(() => {
     const fetchFromApi = async (id) => {
       setLoading(true);
@@ -62,25 +61,25 @@ export default function Profile() {
     const idUrl = params.id;
     const estadoNavegacao = location.state?.pokemon;
 
-    // Se temos dados no state E o ID bate com a URL, usa o state (rápido)
+    
     if (estadoNavegacao && String(estadoNavegacao.id) === String(idUrl)) {
       setLocalPokemon(estadoNavegacao);
       setLoading(false);
     } 
-    // Se não, busca na API pelo ID da URL
+    
     else if (idUrl) {
       fetchFromApi(idUrl);
     }
     
   }, [params.id, location.state]);
 
-  // 2. CARREGAR DETALHES (Descrição e Evoluções)
+  
   useEffect(() => {
     if (!localPokemon) return;
 
     const fetchDetails = async () => {
       try {
-        // Busca espécie (para descrição e link de evolução)
+        
         const speciesRes = await fetch(localPokemon.species.url);
         const speciesData = await speciesRes.json();
 
@@ -112,13 +111,13 @@ export default function Profile() {
     };
 
     fetchDetails();
-  }, [localPokemon?.id]); // Roda sempre que o ID mudar
+  }, [localPokemon?.id]); 
 
   const handleEvoClick = (id) => {
     navigate(`/profile/${id}`);
   };
 
-  // Renderização condicional para não quebrar se estiver carregando
+  
   if (loading) return <div className="profile-container"><h3>Carregando...</h3></div>;
   if (!localPokemon) return <div className="profile-container"><h3>Pokémon não encontrado.</h3></div>;
 

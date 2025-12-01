@@ -1,4 +1,4 @@
-/* ==== CONTAINER PRINCIPAL ==== */
+
 .home-container {
   background: var(--bg-secondary);
   min-height: 100vh;
@@ -6,13 +6,13 @@
   font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* ==== CONTEÚDO ==== */
+
 .home-content {
   text-align: center;
   padding-top: 20px;
 }
 
-/* ==== TÍTULO POKÉDEX ==== */
+
 .home-content h1 {
   font-size: 42px;
   font-weight: 800;
@@ -22,7 +22,7 @@
   letter-spacing: -0.5px;
 }
 
-/* ==== BOTÕES DE NAVEGAÇÃO ==== */
+
 .btn {
   display: inline-block;
   padding: 12px 20px;
@@ -48,11 +48,7 @@
   box-shadow: 0 3px 0 #000;
 }
 
-/* ================================================= */
-/* ==== ESTILOS DOS CARDS (IGUAL GERAÇÕES) ==== */
-/* ================================================= */
 
-/* ==== GRID ==== */
 .grid-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -60,11 +56,11 @@
   padding: 0 40px;
   margin-top: 40px;
   margin-bottom: 40px;
-  /* IMPORTANTE: Impede que os cards estiquem verticalmente */
+  
   align-items: start; 
 }
 
-/* ==== CARD ==== */
+
 .card-clickable {
   background: var(--card-bg);
   border-radius: 16px;
@@ -81,7 +77,7 @@
   justify-content: flex-start;
 }
 
-/* Efeito de brilho ao passar o mouse */
+
 .card-clickable::before {
   content: '';
   position: absolute;
@@ -104,7 +100,7 @@
   opacity: 1;
 }
 
-/* ==== IMAGEM ==== */
+
 .card-clickable img {
   width: 110px;
   height: 110px;
@@ -113,7 +109,7 @@
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-/* ==== NOME E NÚMERO (#001 Bulbasaur) ==== */
+
 .card-clickable h3 {
   font-family: 'Nunito', sans-serif;
   font-size: 15px;
@@ -125,7 +121,7 @@
   width: 100%;
 }
 
-/* ==== CONTAINER DAS PÍLULAS (TIPOS) ==== */
+
 .types-wrapper {
   display: flex;
   justify-content: center;
@@ -135,24 +131,24 @@
   width: 100%;
 }
 
-/* ==== PÍLULAS DE TIPO (Grass, Poison, etc) ==== */
+
 .type-badge {
   padding: 4px 14px;
   border-radius: 12px;
   font-size: 11px;
   font-weight: 700;
-  color: #fff; /* Texto branco */
+  color: #fff; 
   text-transform: capitalize;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   white-space: nowrap;
   text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
-/* No final do arquivo home.css */
+
 
 .pokemon-logo {
   width: 280px;  /* Tamanho ideal */
-  max-width: 80%; /* Para não estourar em celular */
+  max-width: 80%; 
   display: block;
-  margin: 0 auto 10px auto; /* Centraliza e dá espaço embaixo */
-  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); /* Sombra bonita igual do print */
+  margin: 0 auto 10px auto; 
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
 }
