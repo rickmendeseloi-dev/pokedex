@@ -71,8 +71,6 @@ export default function Home({ setPokemonData }) {
     navigate(`/profile/${pokemon.id}`, { state: { pokemon } });
   };
 
-  // 2. LÓGICA DE FILTRO (Nome ou ID)
-  const filteredPokemons = pokemons.filter((p) => {
   const filteredPokemons = pokemons.filter((p) => {
     if (!searchText) return true;
     const lowerText = searchText.toLowerCase();
@@ -80,13 +78,13 @@ export default function Home({ setPokemonData }) {
       p.name.toLowerCase().includes(lowerText) ||
       String(p.id).includes(lowerText)
     );
+  });
+
   return (
-    <div>
     <div>
       <Navbar pokemonFilter={setSearchText} />
       <div className="home-container">
         <main className="home-content">
-          
           <img 
             src={logo} 
             alt="Pokémon Logo" 
@@ -107,12 +105,12 @@ export default function Home({ setPokemonData }) {
           ) : (
             <>
               <p style={{ marginBottom: 8, fontWeight: 700 }}>
-                {/* Mostra contagem dos filtrados */}
-              <p style={{ marginBottom: 8, fontWeight: 700 }}>
                 Mostrando {filteredPokemons.length} pokémons
               </p>
               
-              <div className="grid-cards">raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`;
+              <div className="grid-cards">
+                {filteredPokemons.map((p) => {
+                  const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`;
                   
                   return (
                     <div key={p.id} className="card-clickable" onClick={() => pokemonPickHandler(p)}>
@@ -142,10 +140,8 @@ export default function Home({ setPokemonData }) {
                     </div>
                   );
                 })}
-                {/* Mensagem caso a busca não encontre nada */}
                 {filteredPokemons.length === 0 && (
-                })}
-                {filteredPokemons.length === 0 && (
+                  <p>Nenhum pokémon encontrado.</p>
                 )}
               </div>
             </>
