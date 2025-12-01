@@ -3,8 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./home.css";
 import Navbar from "../componentes/NavBar/index.jsx";
-// Importe a logo que você escolheu
-import logo from '../assets/logo3pk.png'; 
+// Importe a logo que você escolheu (substituída por Pikachu)
+import logo from '../assets/pikachu.png';
 
 // Objeto de cores para os tipos
 const typeColors = {
