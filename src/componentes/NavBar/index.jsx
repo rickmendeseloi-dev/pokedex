@@ -9,9 +9,9 @@ export default function Navbar({ pokemonFilter = () => {}, hideSearch = false })
   const { isDark, toggleTheme } = useTheme();
 
   return (
-        <header style={{ background: '#e40f0fff', color: '#fff', padding: 0, margin: 0, position: 'sticky', top: 0, left: 0, right: 0, zIndex: 1000 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 18px', width: '100%' }}>
+    <header style={{ background: '#e40f0fff', color: '#ffffffff', padding: '10px 16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           
           <img 
             src={logo} 
