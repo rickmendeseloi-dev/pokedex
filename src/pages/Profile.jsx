@@ -21,6 +21,7 @@ const typeColors = {
   dragon: '#7038F8', dragao: '#7038F8', dragão: '#7038F8',
   steel: '#B8B8D0', aco: '#B8B8D0', aço: '#B8B8D0',
   flying: '#A890F0', voador: '#A890F0',
+  dark: '#705746',
 };
 
 const statNames = {
@@ -35,13 +36,14 @@ const statNames = {
 export default function Profile() {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams();
+  const params = useParams(); // ID da URL
 
   const [localPokemon, setLocalPokemon] = useState(null);
   const [flavorText, setFlavorText] = useState("");
   const [evolutionDetails, setEvolutionDetails] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 1. CARREGAR DADOS (Prioridade: URL > State)
   useEffect(() => {
     const fetchFromApi = async (id) => {
       setLoading(true);
@@ -59,28 +61,34 @@ export default function Profile() {
 
     const idUrl = params.id;
     const estadoNavegacao = location.state?.pokemon;
-    const idUrl = params.id;
-    const estadoNavegacao = location.state?.pokemon;
 
+    // Se temos dados no state E o ID bate com a URL, usa o state (rápido)
     if (estadoNavegacao && String(estadoNavegacao.id) === String(idUrl)) {
       setLocalPokemon(estadoNavegacao);
       setLoading(false);
     } 
+    // Se não, busca na API pelo ID da URL
     else if (idUrl) {
       fetchFromApi(idUrl);
     }
     
   }, [params.id, location.state]);
+
+  // 2. CARREGAR DETALHES (Descrição e Evoluções)
   useEffect(() => {
     if (!localPokemon) return;
-  useEffect(() => {ils = async () => {
+
+    const fetchDetails = async () => {
       try {
+        // Busca espécie (para descrição e link de evolução)
         const speciesRes = await fetch(localPokemon.species.url);
         const speciesData = await speciesRes.json();
 
+        // Descrição
         const entry = speciesData.flavor_text_entries.find(e => e.language.name === 'en');
         setFlavorText(entry ? entry.flavor_text.replace(/\f/g, ' ') : "No description.");
 
+        // Cadeia de Evolução
         const evoRes = await fetch(speciesData.evolution_chain.url);
         const evoData = await evoRes.json();
 
@@ -104,17 +112,18 @@ export default function Profile() {
     };
 
     fetchDetails();
-      }
-    };
-
-    fetchDetails();
-  }, [localPokemon?.id]);
+  }, [localPokemon?.id]); // Roda sempre que o ID mudar
 
   const handleEvoClick = (id) => {
     navigate(`/profile/${id}`);
   };
 
+  // Renderização condicional para não quebrar se estiver carregando
   if (loading) return <div className="profile-container"><h3>Carregando...</h3></div>;
+  if (!localPokemon) return <div className="profile-container"><h3>Pokémon não encontrado.</h3></div>;
+
+  const mainType = localPokemon.types[0].type.name;
+  const themeColor = typeColors[mainType] || '#777';
   const imgHd = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${localPokemon.id}.png`;
 
   return (
@@ -142,7 +151,7 @@ export default function Profile() {
             </div>
 
             <h3 className="section-title" style={{ color: themeColor }}>Sobre</h3>
-            <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '20px' }}>{flavorText}</p>
+            <p style={{ textAlign: 'center', color: '#555', marginBottom: '20px' }}>{flavorText}</p>
 
             <div className="info-grid">
               <div className="info-item"><h4>Altura</h4><p>{localPokemon.height / 10} m</p></div>
