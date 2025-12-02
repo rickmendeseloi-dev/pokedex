@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import Geracoes from "./pages/Geracoes";
 import Categorias from "./pages/Categorias";
 import Profile from "./pages/Profile";
-
+import "./App.css";
 function App() {
   const [pokemonData, setPokemonData] = useState(null);
 
