@@ -70,6 +70,7 @@ export default function Geracoes() {
   }, [geracaoAtual]);
 
   const handlePokemonClick = (pokemon) => {
+    
     navigate(`/profile/${pokemon.id}`, { state: { pokemon } });
   };
 
@@ -77,7 +78,12 @@ export default function Geracoes() {
     <div>
       <Navbar />
       <div className="geracoes-container">
+        
+        
         <div className="header-geracoes">
+          <button className="btn-voltar" onClick={() => navigate('/')}>
+            ← Voltar
+          </button>
           <h1>Pokémons por Geração</h1>
         </div>
 

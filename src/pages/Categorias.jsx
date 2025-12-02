@@ -62,11 +62,9 @@ export default function Categorias() {
   useEffect(() => {
     if (!categoriaSelecionada) return;
 
-    // Busca lista de pokemons daquele tipo
     fetch(`https://pokeapi.co/api/v2/type/${categoriaSelecionada}`)
       .then((res) => res.json())
       .then((data) => {
-        // Mapeia e busca detalhes básicos (só pra ter a imagem e os tipos no card)
         const pokemonPromises = data.pokemon.map((p) => {
           const id = getPokemonId(p.pokemon.url);
           if(parseInt(id) > 10000) return null; 
@@ -91,7 +89,12 @@ export default function Categorias() {
     <div>
       <Navbar />
       <div className="categorias-container">
+        
+        
         <div className="header-categorias">
+          <button className="btn-voltar" onClick={() => navigate('/')}>
+            ← Voltar
+          </button>
           <h1>Categorias</h1>
         </div>
 
@@ -102,9 +105,9 @@ export default function Categorias() {
               onClick={() => setCategoriaSelecionada(cat.tipo)}
               className={categoriaSelecionada === cat.tipo ? 'cat-btn ativo' : 'cat-btn'}
               style={{ 
-                borderColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#e0e0e0',
-                color: categoriaSelecionada === cat.tipo ? '#fff' : '#555',
-                backgroundColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#f5f5f5'
+                 borderColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#e0e0e0',
+                 color: categoriaSelecionada === cat.tipo ? '#fff' : '#555',
+                 backgroundColor: categoriaSelecionada === cat.tipo ? TYPE_COLORS[cat.tipo] : '#f5f5f5'
               }}
             >
               {cat.nome}
